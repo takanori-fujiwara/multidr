@@ -1,3 +1,17 @@
+*.out
+*.o
+*.gz
+*.log
+*.pyc
+.DS_Store
+data/
+build*
+*.pro.user
+.Rhistory
+.RData
+.ipynb_checkpoints/
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
