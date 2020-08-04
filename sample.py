@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from sklearn.cluster import SpectralClustering
 from umap import UMAP
 
 from multidr.tdr import TDR
+from multidr.cl import CL
 
 
 def plot_results(results):
@@ -29,6 +31,10 @@ def plot_results(results):
     plt.tight_layout()
     plt.show()
 
+
+###
+### 1. Two-step DR examples
+###
 
 ## Examples below are from Fujiwara et al., "A Visual Analytics Framework for
 ## Reviewing Multivariate Time-Series Data with Dimensionality Reduction", 2020
@@ -65,3 +71,35 @@ results = tdr.fit_transform(X,
                             verbose=True)
 
 plot_results(results)
+
+###
+### 2. Two-step DR interpretation examples
+###
+
+## 2-1. parametric mappings
+print('Explained variance ratio')
+print('t: ' + str(tdr.first_learner['t'].explained_variance_ratio_[0]))
+print('n: ' + str(tdr.first_learner['n'].explained_variance_ratio_[0]))
+print('d: ' + str(tdr.first_learner['d'].explained_variance_ratio_[0]))
+
+## 2-2. feature contributions
+clustering = SpectralClustering(n_clusters=3,
+                                assign_labels="discretize",
+                                random_state=0).fit(results['Y_n_dt'])
+plt.figure(figsize=(6, 6))
+plt.scatter(results['Y_n_dt'][:, 0],
+            results['Y_n_dt'][:, 1],
+            s=5,
+            c=clustering.labels_)
+plt.show()
+
+X_nt = tdr.X_tn.transpose()
+cluster1 = X_nt[clustering.labels_ == 1, :]
+others = X_nt[clustering.labels_ != 1, :]
+
+cl = CL()
+cl.fit(cluster1, others, var_thres_ratio=0.5, max_log_alpha=2)
+
+plt.figure(figsize=(8, 4))
+plt.plot(cl.fcs)
+plt.show()
