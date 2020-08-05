@@ -34,10 +34,10 @@ Setup
 Usage
 -----
 * Import installed modules from python (e.g., `from multidr.tdr import TDR`). See sample.py for examples.
+* For detailed documentations, please see doc/index.html or directly see comments in multidr/tdr.py and multidr/cl.py.
 
 ******
 
 ## How to Cite
 Please, cite:    
-Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction".
-(Journal information will be provided soon), 2020.
+Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction". arXiv:2008.01645, 2020.

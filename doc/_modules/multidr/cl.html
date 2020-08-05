@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multidr.cl &mdash; multidr  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> multidr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../multidr.html">multidr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sample.html">sample module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">multidr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>multidr.cl</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for multidr.cl</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+
+<span class="kn">from</span> <span class="nn">ccpca</span> <span class="kn">import</span> <span class="n">CCPCA</span>
+
+
+<div class="viewcode-block" id="CL"><a class="viewcode-back" href="../../multidr.html#multidr.cl.CL">[docs]</a><span class="k">class</span> <span class="nc">CL</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;TDR: Two-step dimensionality reduction (DR) to project a third-order</span>
+<span class="sd">    tensor onto a lower-dimensional space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    learner: Class Object for DR, optional, (default=None)</span>
+<span class="sd">        Contrastive representation learning class object. Any class</span>
+<span class="sd">        object that (1) has fit as a class method, (2) can take two matrices as</span>
+<span class="sd">        the first parameters of fit, and (3) has get_feat_contribs as a class</span>
+<span class="sd">        method (e.g., ccPCA, https://github.com/takanori-fujiwara/ccpca).</span>
+<span class="sd">        If None, ccPCA is set as a learner.</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    learner: the same with the parameter above.</span>
+<span class="sd">    fcs: array-like, shape(n_features, 1)</span>
+<span class="sd">        Feature contributions.</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.cluster import SpectralClustering</span>
+<span class="sd">    &gt;&gt;&gt; from umap import UMAP</span>
+
+<span class="sd">    &gt;&gt;&gt; from multidr.tdr import TDR</span>
+<span class="sd">    &gt;&gt;&gt; from multidr.cl import CL</span>
+
+<span class="sd">    &gt;&gt;&gt; X = np.load(&#39;./data/air_quality/tensor.npy&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; tdr = TDR(first_learner=PCA(n_components=1),</span>
+<span class="sd">    ...           second_learner=UMAP(n_components=2,</span>
+<span class="sd">    ...                               n_neighbors=7,</span>
+<span class="sd">    ...                               min_dist=0.15))</span>
+
+<span class="sd">    &gt;&gt;&gt; results = tdr.fit_transform(X,</span>
+<span class="sd">    ...                             first_scaling=True,</span>
+<span class="sd">    ...                             second_scaling=False,</span>
+<span class="sd">    ...                             verbose=True)</span>
+
+<span class="sd">    &gt;&gt;&gt; clustering = SpectralClustering(n_clusters=3,</span>
+<span class="sd">    ...                                 assign_labels=&quot;discretize&quot;,</span>
+<span class="sd">    ...                                 random_state=0).fit(results[&#39;Z_n_dt&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; plt.figure(figsize=(6, 6))</span>
+<span class="sd">    &gt;&gt;&gt; plt.scatter(results[&#39;Z_n_dt&#39;][:, 0],</span>
+<span class="sd">    ...             results[&#39;Z_n_dt&#39;][:, 1],</span>
+<span class="sd">    ...             s=5,</span>
+<span class="sd">    ...             c=clustering.labels_)</span>
+<span class="sd">    &gt;&gt;&gt; plt.title(&#39;Z_n_dt with spectral clustering&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+
+<span class="sd">    &gt;&gt;&gt; Y_nt = tdr.Y_tn.transpose()</span>
+
+<span class="sd">    &gt;&gt;&gt; cl = CL()</span>
+
+<span class="sd">    &gt;&gt;&gt; plt.figure(figsize=(8, 4))</span>
+
+<span class="sd">    &gt;&gt;&gt; for cluster_id in np.unique(clustering.labels_):</span>
+<span class="sd">    ...     cluster = Y_nt[clustering.labels_ == cluster_id, :]</span>
+<span class="sd">    ...     others = Y_nt[clustering.labels_ != cluster_id, :]</span>
+<span class="sd">    ...     cl.fit(cluster, others, var_thres_ratio=0.5, max_log_alpha=2)</span>
+<span class="sd">    ...     plt.plot(cl.fcs, c=plt.get_cmap(&#39;Accent&#39;)(cluster_id))</span>
+
+<span class="sd">    &gt;&gt;&gt; plt.xlabel(&#39;time&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.ylabel(&#39;Feature contribution (without scaling)&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.title(&#39;Feature cotributions&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">learner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_learner</span><span class="p">(</span><span class="n">learner</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CL.fit"><a class="viewcode-back" href="../../multidr.html#multidr.cl.CL.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="o">**</span><span class="n">contrast_learner_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If using auto alpha selection, find the best contrast parameter alpha</span>
+<span class="sd">        first. Otherwise, input alpha value is used for fit. Then, fit using</span>
+<span class="sd">        cPCA with the (best) alpha. For cPCA, a matrix E concatenating K and R</span>
+<span class="sd">        will be used as a foreground dataset and R will be used as a background</span>
+<span class="sd">        dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        K: array-like, shape(n_samples1, n_components)</span>
+<span class="sd">            A target cluster.</span>
+<span class="sd">        R: array of array-like, shape(n_samples2, n_components)</span>
+<span class="sd">            Background datasets.</span>
+<span class="sd">        contrast_learner_kwargs: additional keywards for input parameters.</span>
+<span class="sd">            e.g., for ccPCA, var_thres_ratio=0.5, max_log_alpha=2</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learner</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="o">**</span><span class="n">contrast_learner_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner</span><span class="o">.</span><span class="n">get_feat_contribs</span><span class="p">()</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">K</span><span class="p">,</span> <span class="n">R</span><span class="p">))</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1">## adjust fcs direcrtion</span>
+
+        <span class="c1"># check pearson corr between &quot;selected or not&quot; and &quot;feature values&quot;</span>
+        <span class="c1"># if selected rows tend to have higher values corr becomes positive</span>
+        <span class="n">corr_selected_fval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">col</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+        <span class="c1"># compute score of agreement of correlation and fcs directions</span>
+        <span class="c1"># (more correlated or higher absolute value of fcs will have heavier weights)</span>
+        <span class="n">agreement_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">corr_selected_fval</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">agreement_score</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fcs</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">fcs</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CL.set_learner"><a class="viewcode-back" href="../../multidr.html#multidr.cl.CL.set_learner">[docs]</a>    <span class="k">def</span> <span class="nf">set_learner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">learner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a contrastive representation learning method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        learner: Class object for contrastive learning.</span>
+<span class="sd">            Contrastive representation learning class object. Any class</span>
+<span class="sd">            object that (1) has fit as a class method, (2) can take two matrices as</span>
+<span class="sd">            the first parameters of fit, and (3) has get_feat_contribs as a class</span>
+<span class="sd">            method (e.g., ccPCA, https://github.com/takanori-fujiwara/ccpca).</span>
+<span class="sd">            If None, ccPCA is set as a learner.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">learner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">learner</span> <span class="o">=</span> <span class="n">CCPCA</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">learner</span> <span class="o">=</span> <span class="n">learner</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Author
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

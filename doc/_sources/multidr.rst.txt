@@ -1,0 +1,30 @@
+multidr package
+===============
+
+Submodules
+----------
+
+multidr.cl module
+-----------------
+
+.. automodule:: multidr.cl
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multidr.tdr module
+------------------
+
+.. automodule:: multidr.tdr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: multidr
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multidr package &mdash; multidr  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="sample module" href="sample.html" />
+    <link rel="prev" title="Welcome to multidr’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> multidr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">multidr package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-multidr.cl">multidr.cl module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-multidr.tdr">multidr.tdr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-multidr">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample.html">sample module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multidr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>multidr package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/multidr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multidr-package">
+<h1>multidr package<a class="headerlink" href="#multidr-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-multidr.cl">
+<span id="multidr-cl-module"></span><h2>multidr.cl module<a class="headerlink" href="#module-multidr.cl" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="multidr.cl.CL">
+<em class="property">class </em><code class="sig-prename descclassname">multidr.cl.</code><code class="sig-name descname">CL</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">learner</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/cl.html#CL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.cl.CL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>TDR: Two-step dimensionality reduction (DR) to project a third-order
+tensor onto a lower-dimensional space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>learner</strong> (<em>Class Object for DR</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – Contrastive representation learning class object. Any class
+object that (1) has fit as a class method, (2) can take two matrices as
+the first parameters of fit, and (3) has get_feat_contribs as a class
+method (e.g., ccPCA, <a class="reference external" href="https://github.com/takanori-fujiwara/ccpca">https://github.com/takanori-fujiwara/ccpca</a>).
+If None, ccPCA is set as a learner.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="multidr.cl.CL.learner">
+<code class="sig-name descname">learner</code><a class="headerlink" href="#multidr.cl.CL.learner" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>the same with the parameter above.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="multidr.cl.CL.fcs">
+<code class="sig-name descname">fcs</code><a class="headerlink" href="#multidr.cl.CL.fcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Feature contributions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>array-like, shape(n_features, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">----------</code></dt>
+<dd></dd></dl>
+
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">SpectralClustering</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">umap</span> <span class="kn">import</span> <span class="n">UMAP</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multidr.tdr</span> <span class="kn">import</span> <span class="n">TDR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multidr.cl</span> <span class="kn">import</span> <span class="n">CL</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./data/air_quality/tensor.npy&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdr</span> <span class="o">=</span> <span class="n">TDR</span><span class="p">(</span><span class="n">first_learner</span><span class="o">=</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="n">second_learner</span><span class="o">=</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.15</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">tdr</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">first_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">second_scaling</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clustering</span> <span class="o">=</span> <span class="n">SpectralClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">assign_labels</span><span class="o">=</span><span class="s2">&quot;discretize&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;Z_n_dt&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;Z_n_dt&#39;</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Z_n_dt&#39;</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">c</span><span class="o">=</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Z_n_dt with spectral clustering&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Y_nt</span> <span class="o">=</span> <span class="n">tdr</span><span class="o">.</span><span class="n">Y_tn</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cl</span> <span class="o">=</span> <span class="n">CL</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">cluster</span> <span class="o">=</span> <span class="n">Y_nt</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">... </span>    <span class="n">others</span> <span class="o">=</span> <span class="n">Y_nt</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span> <span class="o">!=</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">... </span>    <span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">others</span><span class="p">,</span> <span class="n">var_thres_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_log_alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">fcs</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;Accent&#39;</span><span class="p">)(</span><span class="n">cluster_id</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Feature contribution (without scaling)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Feature cotributions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="multidr.cl.CL.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">K</span></em>, <em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">contrast_learner_kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/cl.html#CL.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.cl.CL.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>If using auto alpha selection, find the best contrast parameter alpha
+first. Otherwise, input alpha value is used for fit. Then, fit using
+cPCA with the (best) alpha. For cPCA, a matrix E concatenating K and R
+will be used as a foreground dataset and R will be used as a background
+dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n_samples1</em><em>, </em><em>n_components</em><em>)</em>) – A target cluster.</p></li>
+<li><p><strong>R</strong> (<em>array of array-like</em><em>, </em><em>shape</em><em>(</em><em>n_samples2</em><em>, </em><em>n_components</em><em>)</em>) – Background datasets.</p></li>
+<li><p><strong>contrast_learner_kwargs</strong> (<em>additional keywards for input parameters.</em>) – e.g., for ccPCA, var_thres_ratio=0.5, max_log_alpha=2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="multidr.cl.CL.set_learner">
+<code class="sig-name descname">set_learner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">learner</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/cl.html#CL.set_learner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.cl.CL.set_learner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a contrastive representation learning method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>learner</strong> (<em>Class object for contrastive learning.</em>) – Contrastive representation learning class object. Any class
+object that (1) has fit as a class method, (2) can take two matrices as
+the first parameters of fit, and (3) has get_feat_contribs as a class
+method (e.g., ccPCA, <a class="reference external" href="https://github.com/takanori-fujiwara/ccpca">https://github.com/takanori-fujiwara/ccpca</a>).
+If None, ccPCA is set as a learner.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-multidr.tdr">
+<span id="multidr-tdr-module"></span><h2>multidr.tdr module<a class="headerlink" href="#module-multidr.tdr" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="multidr.tdr.TDR">
+<em class="property">class </em><code class="sig-prename descclassname">multidr.tdr.</code><code class="sig-name descname">TDR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">first_learner</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">second_learner</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>TDR: Two-step dimensionality reduction (DR) to project a third-order</dt><dd><p>tensor onto a lower-dimensional space</p>
+<dl class="simple">
+<dt>first_learner: Class Object for DR, optional, (default=None)</dt><dd><p>Dimensionality reduction class object for the first DR step. Any class
+object that has fit_transform as a class method (e.g., PCA in
+scikit-learn). If None, sklearn’s PCA is set as a learner (i.e.,
+PCA(n_components=1)).
+Also, to set a different DR for individual modes, you can input as a
+dict. e.g., {‘t’: PCA(n_components=1), ‘n’: PCA(n_components=1), ‘d’:
+PCA(n_components=1)}</p>
+</dd>
+<dt>second_learner: Class Object for DR, optional, (default=None)</dt><dd><p>Dimensionality reduction class object for the second DR step. Any class
+object that has fit_transform as a class method (e.g., UMAP in
+umap-learn). If None, UMAP is set as a learner (i.e.,
+UMAP(n_components=2)).
+Also, to set a different DR for individual modes, you can input as a
+dict. e.g., {‘t’: UMAP(n_components=2), ‘n’: PCA(n_components=2), ‘d’:
+TSNE(n_components=2)}</p>
+</dd>
+</dl>
+<p>first_learner: the same with the input parameter one.
+second_learner: the same with the input parameter one.
+Y_tn: ndarray, shape (n_time_points, n_instances)</p>
+<blockquote>
+<div><p>The matrix Y obtained by applying the first DR along a variable mode.
+Rows and columns correspond to time points and intances, repectively.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Y_nd: ndarray, shape (n_instances, n_variables)</dt><dd><p>The matrix Y obtained by applying the first DR along a time mode.
+Rows and columns correspond to intances and variables, repectively.</p>
+</dd>
+<dt>Y_dt: ndarray, shape (n_variables, n_time_points)</dt><dd><p>The matrix Y obtained by applying the first DR along an instance mode.
+Rows and columns correspond to variables and time points, repectively.</p>
+</dd>
+<dt>Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a variable mode
+and then the second DR along a time mode (1st DR : d, 2nd DR: t).</p>
+</dd>
+<dt>Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a time mode
+and then the second DR along a variable mode (1st DR: t, 2nd DR: d).</p>
+</dd>
+<dt>Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along an instance mode
+and then the second DR along a time mode (1st DR: n, 2nd DR: t).</p>
+</dd>
+<dt>Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a time mode
+and then the second DR along an instance mode (1st DR: t, 2nd DR: n).</p>
+</dd>
+<dt>Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a variable mode
+and then the second DR along an instance mode (1st DR: d, 2nd DR: n).</p>
+</dd>
+<dt>Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along an instance mode
+and then the second DR along a variable mode (1st DR: n, 2nd DR: d).</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">umap</span> <span class="kn">import</span> <span class="n">UMAP</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">multidr.tdr</span> <span class="kn">import</span> <span class="n">TDR</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="s1">&#39;Z_n_dt&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_n_td&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_d_nt&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_d_tn&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_t_dn&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_t_nd&#39;</span><span class="p">]):</span>
+<span class="gp">... </span>        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">Z</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="n">Z</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;#84B5B2&#39;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">Z</span> <span class="o">==</span> <span class="s1">&#39;Z_n_dt&#39;</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Instance sim &#39;</span> <span class="sa">r</span><span class="s1">&#39;$v^{(D</span>
+</pre></div>
+</div>
+</dd>
+<dt>ightarrow T)}_{n}$’)</dt><dd><p>…         elif Z == ‘Z_n_td’:
+…             plt.title(‘Instance sim ‘ r’$v^{(T</p>
+</dd>
+<dt>ightarrow D)}_{n}$’)</dt><dd><p>…         elif Z == ‘Z_d_nt’:
+…             plt.title(‘Variable sim ‘ r’$v^{(N</p>
+</dd>
+<dt>ightarrow T)}_{d}$’)</dt><dd><p>…         elif Z == ‘Z_d_tn’:
+…             plt.title(‘Variable sim ‘ r’$v^{(T</p>
+</dd>
+<dt>ightarrow N)}_{d}$’)</dt><dd><p>…         elif Z == ‘Z_t_dn’:
+…             plt.title(‘Time point sim ‘ r’$v^{(D</p>
+</dd>
+<dt>ightarrow N)}_{t}$’)</dt><dd><p>…         elif Z == ‘Z_t_nd’:
+…             plt.title(‘Time point sim ‘ r’$v^{(N</p>
+</dd>
+<dt>ightarrow D)}_{t}$’)</dt><dd><p>…         plt.xticks([])
+…         plt.yticks([])
+…     plt.tight_layout()
+…     plt.title(‘Two-step DR results’)
+…     plt.show()</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./data/air_quality/tensor.npy&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tdr</span> <span class="o">=</span> <span class="n">TDR</span><span class="p">(</span><span class="n">first_learner</span><span class="o">=</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="n">second_learner</span><span class="o">=</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+<span class="gp">... </span>                              <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.15</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">tdr</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">first_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">second_scaling</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_results</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="multidr.tdr.TDR.fit_transform">
+<code class="sig-name descname">fit_transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">first_scaling</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">second_scaling</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the first and second DR and then return all DR results of 6
+patterns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n_time_points</em><em>, </em><em>n_instances</em><em>, </em><em>n_variables</em><em>)</em>) – Input third-order tensor.</p></li>
+<li><p><strong>first_scaling</strong> (<em>boolean</em><em> or </em><em>dict of booleans</em><em>, </em><em>optional</em><em>, </em><em>default=True</em>) – If True, apply starndarziation before applying the first DR.
+To set scaling for individual modes, you can input as a dict. e.g.,
+{‘t’: False, ‘n’: False, ‘d’: True}</p></li>
+<li><p><strong>second_scaling</strong> (<em>boolean</em><em> or </em><em>dict of booleans</em><em>, </em><em>optional</em><em>, </em><em>default=True</em>) – If True, apply starndarziation before applying the second DR.
+To set scaling for individual modes, you can input as a dict. e.g.,
+{‘t’: False, ‘n’: False, ‘d’: True}</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=False</em>) – If True, print the progress of two-step DR, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a variable mode
+and then the second DR along a time mode (1st DR : d, 2nd DR: t).</p>
+</dd>
+<dt>Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a time mode
+and then the second DR along a variable mode (1st DR: t, 2nd DR: d).</p>
+</dd>
+<dt>Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along an instance mode
+and then the second DR along a time mode (1st DR: n, 2nd DR: t).</p>
+</dd>
+<dt>Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a time mode
+and then the second DR along an instance mode (1st DR: t, 2nd DR: n).</p>
+</dd>
+<dt>Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along a variable mode
+and then the second DR along an instance mode (1st DR: d, 2nd DR: n).</p>
+</dd>
+<dt>Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)</dt><dd><p>The matrix Z obtained by applying the first DR along an instance mode
+and then the second DR along a variable mode (1st DR: n, 2nd DR: d).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict of {“Z_n_dt”, “Z_n_td”, “Z_d_nt”, “Z_d_tn”, “Z_t_dn”, “Z_t_nd”}.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="multidr.tdr.TDR.learn_first_repr">
+<code class="sig-name descname">learn_first_repr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">scaling</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR.learn_first_repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR.learn_first_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the first DR to learn Y_tn, Y_nd, Y_dt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em>(</em><em>n_time_points</em><em>, </em><em>n_instances</em><em>, </em><em>n_variables</em><em>)</em>) – Input third-order tensor.</p></li>
+<li><p><strong>scaling</strong> (<em>boolean</em><em> or </em><em>dict of booleans</em><em>, </em><em>optional</em><em>, </em><em>default=True</em>) – If True, apply starndarziation before applying the first DR.
+To set scaling for individual modes, you can input as a dict. e.g.,
+{‘t’: False, ‘n’: False, ‘d’: True}</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=False</em>) – If True, print the progress of two-step DR, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="multidr.tdr.TDR.learn_second_repr">
+<code class="sig-name descname">learn_second_repr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Y_tn</span></em>, <em class="sig-param"><span class="n">Y_nd</span></em>, <em class="sig-param"><span class="n">Y_dt</span></em>, <em class="sig-param"><span class="n">scaling</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR.learn_second_repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR.learn_second_repr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the first DR to learn Y_tn, Y_nd, Y_dt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Y_tn</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_time_points</em><em>, </em><em>n_instances</em><em>)</em>) – The matrix Y obtained by applying the first DR along a variable mode.
+Rows and columns correspond to time points and intances, repectively.</p></li>
+<li><p><strong>Y_nd</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_instances</em><em>, </em><em>n_variables</em><em>)</em>) – The matrix Y obtained by applying the first DR along a time mode.
+Rows and columns correspond to intances and variables, repectively.</p></li>
+<li><p><strong>Y_dt</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_variables</em><em>, </em><em>n_time_points</em><em>)</em>) – The matrix Y obtained by applying the first DR along an instance mode.
+Rows and columns correspond to variables and time points, repectively.</p></li>
+<li><p><strong>scaling</strong> (<em>boolean</em><em> or </em><em>dict of booleans</em><em>, </em><em>optional</em><em>, </em><em>default=True</em>) – If True, apply starndarziation before applying the second DR.
+To set scaling for individual modes, you can input as a dict. e.g.,
+{‘t’: False, ‘n’: False, ‘d’: True}</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=False</em>) – If True, print the progress of two-step DR, etc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="multidr.tdr.TDR.set_first_learner">
+<code class="sig-name descname">set_first_learner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">first_learner</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR.set_first_learner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR.set_first_learner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a method for the first DR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>first_learner</strong> (<em>Class Object for DR</em>) – Dimensionality reduction class object for the first DR step. Any class
+object that has fit_transform as a class method (e.g., PCA in
+scikit-learn). If None, sklearn’s PCA is set as a learner (i.e.,
+PCA(n_components=1)).
+Also, to set a different DR for individual modes, you can input as a
+dict. e.g., {‘t’: PCA(n_components=1), ‘n’: PCA(n_components=1), ‘d’:
+PCA(n_components=1)}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="multidr.tdr.TDR.set_second_learner">
+<code class="sig-name descname">set_second_learner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">second_learner</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multidr/tdr.html#TDR.set_second_learner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#multidr.tdr.TDR.set_second_learner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a method for the second DR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>second_learner</strong> (<em>Class Object for DR</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – Dimensionality reduction class object for the second DR step. Any class
+object that has fit_transform as a class method (e.g., UMAP in
+umap-learn). If None, UMAP is set as a learner (i.e.,
+UMAP(n_components=2)).
+Also, to set a different DR for individual modes, you can input as a
+dict. e.g., {‘t’: UMAP(n_components=2), ‘n’: PCA(n_components=2), ‘d’:
+TSNE(n_components=2)}</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-multidr">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multidr" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sample.html" class="btn btn-neutral float-right" title="sample module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to multidr’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Author
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

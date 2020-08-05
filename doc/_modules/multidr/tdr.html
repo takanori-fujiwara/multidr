@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>multidr.tdr &mdash; multidr  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> multidr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../multidr.html">multidr package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sample.html">sample module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">multidr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>multidr.tdr</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for multidr.tdr</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">from</span> <span class="nn">umap</span> <span class="kn">import</span> <span class="n">UMAP</span>
+
+
+<div class="viewcode-block" id="TDR"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR">[docs]</a><span class="k">class</span> <span class="nc">TDR</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;TDR: Two-step dimensionality reduction (DR) to project a third-order</span>
+<span class="sd">    tensor onto a lower-dimensional space</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first_learner: Class Object for DR, optional, (default=None)</span>
+<span class="sd">        Dimensionality reduction class object for the first DR step. Any class</span>
+<span class="sd">        object that has fit_transform as a class method (e.g., PCA in</span>
+<span class="sd">        scikit-learn). If None, sklearn&#39;s PCA is set as a learner (i.e.,</span>
+<span class="sd">        PCA(n_components=1)).</span>
+<span class="sd">        Also, to set a different DR for individual modes, you can input as a</span>
+<span class="sd">        dict. e.g., {&#39;t&#39;: PCA(n_components=1), &#39;n&#39;: PCA(n_components=1), &#39;d&#39;:</span>
+<span class="sd">        PCA(n_components=1)}</span>
+<span class="sd">    second_learner: Class Object for DR, optional, (default=None)</span>
+<span class="sd">        Dimensionality reduction class object for the second DR step. Any class</span>
+<span class="sd">        object that has fit_transform as a class method (e.g., UMAP in</span>
+<span class="sd">        umap-learn). If None, UMAP is set as a learner (i.e.,</span>
+<span class="sd">        UMAP(n_components=2)).</span>
+<span class="sd">        Also, to set a different DR for individual modes, you can input as a</span>
+<span class="sd">        dict. e.g., {&#39;t&#39;: UMAP(n_components=2), &#39;n&#39;: PCA(n_components=2), &#39;d&#39;:</span>
+<span class="sd">        TSNE(n_components=2)}</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first_learner: the same with the input parameter one.</span>
+<span class="sd">    second_learner: the same with the input parameter one.</span>
+<span class="sd">    Y_tn: ndarray, shape (n_time_points, n_instances)</span>
+<span class="sd">        The matrix Y obtained by applying the first DR along a variable mode.</span>
+<span class="sd">        Rows and columns correspond to time points and intances, repectively.</span>
+<span class="sd">    Y_nd: ndarray, shape (n_instances, n_variables)</span>
+<span class="sd">        The matrix Y obtained by applying the first DR along a time mode.</span>
+<span class="sd">        Rows and columns correspond to intances and variables, repectively.</span>
+<span class="sd">    Y_dt: ndarray, shape (n_variables, n_time_points)</span>
+<span class="sd">        The matrix Y obtained by applying the first DR along an instance mode.</span>
+<span class="sd">        Rows and columns correspond to variables and time points, repectively.</span>
+<span class="sd">    Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along a variable mode</span>
+<span class="sd">        and then the second DR along a time mode (1st DR : d, 2nd DR: t).</span>
+<span class="sd">    Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along a time mode</span>
+<span class="sd">        and then the second DR along a variable mode (1st DR: t, 2nd DR: d).</span>
+<span class="sd">    Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along an instance mode</span>
+<span class="sd">        and then the second DR along a time mode (1st DR: n, 2nd DR: t).</span>
+<span class="sd">    Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along a time mode</span>
+<span class="sd">        and then the second DR along an instance mode (1st DR: t, 2nd DR: n).</span>
+<span class="sd">    Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along a variable mode</span>
+<span class="sd">        and then the second DR along an instance mode (1st DR: d, 2nd DR: n).</span>
+<span class="sd">    Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)</span>
+<span class="sd">        The matrix Z obtained by applying the first DR along an instance mode</span>
+<span class="sd">        and then the second DR along a variable mode (1st DR: n, 2nd DR: d).</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.decomposition import PCA</span>
+<span class="sd">    &gt;&gt;&gt; from umap import UMAP</span>
+
+<span class="sd">    &gt;&gt;&gt; from multidr.tdr import TDR</span>
+
+<span class="sd">    &gt;&gt;&gt; def plot_results(results):</span>
+<span class="sd">    ...     plt.figure(figsize=(8, 6))</span>
+<span class="sd">    ...     for i, Z in enumerate(</span>
+<span class="sd">    ...         [&#39;Z_n_dt&#39;, &#39;Z_n_td&#39;, &#39;Z_d_nt&#39;, &#39;Z_d_tn&#39;, &#39;Z_t_dn&#39;, &#39;Z_t_nd&#39;]):</span>
+<span class="sd">    ...         plt.subplot(2, 3, i + 1)</span>
+<span class="sd">    ...         plt.scatter(results[Z][:, 0], results[Z][:, 1], s=5, c=&#39;#84B5B2&#39;)</span>
+<span class="sd">    ...         if Z == &#39;Z_n_dt&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Instance sim &#39; r&#39;$v^{(D \rightarrow T)}_{n}$&#39;)</span>
+<span class="sd">    ...         elif Z == &#39;Z_n_td&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Instance sim &#39; r&#39;$v^{(T \rightarrow D)}_{n}$&#39;)</span>
+<span class="sd">    ...         elif Z == &#39;Z_d_nt&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Variable sim &#39; r&#39;$v^{(N \rightarrow T)}_{d}$&#39;)</span>
+<span class="sd">    ...         elif Z == &#39;Z_d_tn&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Variable sim &#39; r&#39;$v^{(T \rightarrow N)}_{d}$&#39;)</span>
+<span class="sd">    ...         elif Z == &#39;Z_t_dn&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Time point sim &#39; r&#39;$v^{(D \rightarrow N)}_{t}$&#39;)</span>
+<span class="sd">    ...         elif Z == &#39;Z_t_nd&#39;:</span>
+<span class="sd">    ...             plt.title(&#39;Time point sim &#39; r&#39;$v^{(N \rightarrow D)}_{t}$&#39;)</span>
+<span class="sd">    ...         plt.xticks([])</span>
+<span class="sd">    ...         plt.yticks([])</span>
+<span class="sd">    ...     plt.tight_layout()</span>
+<span class="sd">    ...     plt.title(&#39;Two-step DR results&#39;)</span>
+<span class="sd">    ...     plt.show()</span>
+
+<span class="sd">    &gt;&gt;&gt; X = np.load(&#39;./data/air_quality/tensor.npy&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; tdr = TDR(first_learner=PCA(n_components=1),</span>
+<span class="sd">    ...           second_learner=UMAP(n_components=2,</span>
+<span class="sd">    ...                               n_neighbors=7,</span>
+<span class="sd">    ...                               min_dist=0.15))</span>
+
+<span class="sd">    &gt;&gt;&gt; results = tdr.fit_transform(X,</span>
+<span class="sd">    ...                             first_scaling=True,</span>
+<span class="sd">    ...                             second_scaling=False,</span>
+<span class="sd">    ...                             verbose=True)</span>
+
+<span class="sd">    &gt;&gt;&gt; plot_results(results)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_learner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">second_learner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_tn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_nd</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_dt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_dt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_td</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_nt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_tn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_dn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_nd</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_first_learner</span><span class="p">(</span><span class="n">first_learner</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_second_learner</span><span class="p">(</span><span class="n">second_learner</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TDR.fit_transform"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">first_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">second_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the first and second DR and then return all DR results of 6</span>
+<span class="sd">        patterns.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: array-like, shape(n_time_points, n_instances, n_variables)</span>
+<span class="sd">            Input third-order tensor.</span>
+<span class="sd">        first_scaling: boolean or dict of booleans, optional, default=True</span>
+<span class="sd">            If True, apply starndarziation before applying the first DR.</span>
+<span class="sd">            To set scaling for individual modes, you can input as a dict. e.g.,</span>
+<span class="sd">            {&#39;t&#39;: False, &#39;n&#39;: False, &#39;d&#39;: True}</span>
+<span class="sd">        second_scaling: boolean or dict of booleans, optional, default=True</span>
+<span class="sd">            If True, apply starndarziation before applying the second DR.</span>
+<span class="sd">            To set scaling for individual modes, you can input as a dict. e.g.,</span>
+<span class="sd">            {&#39;t&#39;: False, &#39;n&#39;: False, &#39;d&#39;: True}</span>
+<span class="sd">        verbose: boolean, optional, default=False</span>
+<span class="sd">            If True, print the progress of two-step DR, etc.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict of {&quot;Z_n_dt&quot;, &quot;Z_n_td&quot;, &quot;Z_d_nt&quot;, &quot;Z_d_tn&quot;, &quot;Z_t_dn&quot;, &quot;Z_t_nd&quot;}.</span>
+<span class="sd">            Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along a variable mode</span>
+<span class="sd">                and then the second DR along a time mode (1st DR : d, 2nd DR: t).</span>
+<span class="sd">            Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along a time mode</span>
+<span class="sd">                and then the second DR along a variable mode (1st DR: t, 2nd DR: d).</span>
+<span class="sd">            Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along an instance mode</span>
+<span class="sd">                and then the second DR along a time mode (1st DR: n, 2nd DR: t).</span>
+<span class="sd">            Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along a time mode</span>
+<span class="sd">                and then the second DR along an instance mode (1st DR: t, 2nd DR: n).</span>
+<span class="sd">            Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along a variable mode</span>
+<span class="sd">                and then the second DR along an instance mode (1st DR: d, 2nd DR: n).</span>
+<span class="sd">            Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)</span>
+<span class="sd">                The matrix Z obtained by applying the first DR along an instance mode</span>
+<span class="sd">                and then the second DR along a variable mode (1st DR: n, 2nd DR: d).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learn_first_repr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="n">first_scaling</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learn_second_repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Y_tn</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">Y_nd</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">Y_dt</span><span class="p">,</span>
+                               <span class="n">scaling</span><span class="o">=</span><span class="n">second_scaling</span><span class="p">,</span>
+                               <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;Z_n_dt&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_dt</span><span class="p">,</span>
+            <span class="s2">&quot;Z_n_td&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_td</span><span class="p">,</span>
+            <span class="s2">&quot;Z_d_nt&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_nt</span><span class="p">,</span>
+            <span class="s2">&quot;Z_d_tn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_tn</span><span class="p">,</span>
+            <span class="s2">&quot;Z_t_dn&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_dn</span><span class="p">,</span>
+            <span class="s2">&quot;Z_t_nd&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_nd</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="TDR.learn_first_repr"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR.learn_first_repr">[docs]</a>    <span class="k">def</span> <span class="nf">learn_first_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the first DR to learn Y_tn, Y_nd, Y_dt.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: array-like, shape(n_time_points, n_instances, n_variables)</span>
+<span class="sd">            Input third-order tensor.</span>
+<span class="sd">        scaling: boolean or dict of booleans, optional, default=True</span>
+<span class="sd">            If True, apply starndarziation before applying the first DR.</span>
+<span class="sd">            To set scaling for individual modes, you can input as a dict. e.g.,</span>
+<span class="sd">            {&#39;t&#39;: False, &#39;n&#39;: False, &#39;d&#39;: True}</span>
+<span class="sd">        verbose: boolean, optional, default=False</span>
+<span class="sd">            If True, print the progress of two-step DR, etc.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">T</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">X_tn_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">T</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">D</span><span class="p">))</span>
+        <span class="n">X_nd_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span> <span class="o">*</span> <span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>
+        <span class="n">X_dt_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">D</span> <span class="o">*</span> <span class="n">T</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+
+        <span class="c1"># unfolding</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+            <span class="n">X_tn_d</span><span class="p">[</span><span class="n">t</span> <span class="o">*</span> <span class="n">N</span><span class="p">:(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">X_nd_t</span><span class="p">[</span><span class="n">n</span> <span class="o">*</span> <span class="n">D</span><span class="p">:(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">D</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">n</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+            <span class="n">X_dt_n</span><span class="p">[</span><span class="n">d</span> <span class="o">*</span> <span class="n">T</span><span class="p">:(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">T</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">d</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reshape done&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set scaler</span>
+        <span class="n">scl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">scaling</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+        <span class="k">elif</span> <span class="n">scaling</span><span class="p">:</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+
+        <span class="c1"># first DR</span>
+        <span class="n">y_nd_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">](</span><span class="n">X_nd_t</span><span class="p">))</span>
+        <span class="n">y_dt_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">](</span><span class="n">X_dt_n</span><span class="p">))</span>
+        <span class="n">y_tn_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">](</span><span class="n">X_tn_d</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;explained_variance_ratio_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exp var ratio for compression of time ponts:&quot;</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;explained_variance_ratio_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exp var ratio for compression of instances&quot;</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;explained_variance_ratio_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exp var ratio for compression of variables:&quot;</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+
+        <span class="c1"># sign flip if the weights tend to be negative</span>
+        <span class="k">if</span> <span class="s1">&#39;components_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">y_nd_t</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="s1">&#39;components_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">y_dt_n</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="s1">&#39;components_&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components_</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">y_tn_d</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># folding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_tn</span> <span class="o">=</span> <span class="n">y_tn_d</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">T</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_nd</span> <span class="o">=</span> <span class="n">y_nd_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">D</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Y_dt</span> <span class="o">=</span> <span class="n">y_dt_n</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;first repr done&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TDR.learn_second_repr"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR.learn_second_repr">[docs]</a>    <span class="k">def</span> <span class="nf">learn_second_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Y_tn</span><span class="p">,</span> <span class="n">Y_nd</span><span class="p">,</span> <span class="n">Y_dt</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the first DR to learn Y_tn, Y_nd, Y_dt.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Y_tn: ndarray, shape (n_time_points, n_instances)</span>
+<span class="sd">            The matrix Y obtained by applying the first DR along a variable mode.</span>
+<span class="sd">            Rows and columns correspond to time points and intances, repectively.</span>
+<span class="sd">        Y_nd: ndarray, shape (n_instances, n_variables)</span>
+<span class="sd">            The matrix Y obtained by applying the first DR along a time mode.</span>
+<span class="sd">            Rows and columns correspond to intances and variables, repectively.</span>
+<span class="sd">        Y_dt: ndarray, shape (n_variables, n_time_points)</span>
+<span class="sd">            The matrix Y obtained by applying the first DR along an instance mode.</span>
+<span class="sd">            Rows and columns correspond to variables and time points, repectively.</span>
+<span class="sd">        scaling: boolean or dict of booleans, optional, default=True</span>
+<span class="sd">            If True, apply starndarziation before applying the second DR.</span>
+<span class="sd">            To set scaling for individual modes, you can input as a dict. e.g.,</span>
+<span class="sd">            {&#39;t&#39;: False, &#39;n&#39;: False, &#39;d&#39;: True}</span>
+<span class="sd">        verbose: boolean, optional, default=False</span>
+<span class="sd">            If True, print the progress of two-step DR, etc.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set scaler</span>
+        <span class="n">scl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">scaling</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span> <span class="k">if</span> <span class="n">scaling</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
+        <span class="k">elif</span> <span class="n">scaling</span><span class="p">:</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+            <span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">scale</span>
+
+        <span class="c1"># second DR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">](</span>
+            <span class="n">Y_tn</span><span class="o">.</span><span class="n">transpose</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_n_dt done&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_nt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">](</span><span class="n">Y_dt</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_d_nt done&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">](</span><span class="n">Y_tn</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_t_dn done&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_d_tn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">](</span>
+            <span class="n">Y_nd</span><span class="o">.</span><span class="n">transpose</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_d_tn done&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_t_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">](</span>
+            <span class="n">Y_dt</span><span class="o">.</span><span class="n">transpose</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_t_nd done&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z_n_td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scl</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">](</span><span class="n">Y_nd</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z_n_td done&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;second repr done&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TDR.set_first_learner"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR.set_first_learner">[docs]</a>    <span class="k">def</span> <span class="nf">set_first_learner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_learner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a method for the first DR.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        first_learner: Class Object for DR</span>
+<span class="sd">            Dimensionality reduction class object for the first DR step. Any class</span>
+<span class="sd">            object that has fit_transform as a class method (e.g., PCA in</span>
+<span class="sd">            scikit-learn). If None, sklearn&#39;s PCA is set as a learner (i.e.,</span>
+<span class="sd">            PCA(n_components=1)).</span>
+<span class="sd">            Also, to set a different DR for individual modes, you can input as a</span>
+<span class="sd">            dict. e.g., {&#39;t&#39;: PCA(n_components=1), &#39;n&#39;: PCA(n_components=1), &#39;d&#39;:</span>
+<span class="sd">            PCA(n_components=1)}</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">first_learner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_learner</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">first_learner</span><span class="p">),</span>
+                <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">first_learner</span><span class="p">),</span>
+                <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">first_learner</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_learner</span> <span class="o">=</span> <span class="n">first_learner</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TDR.set_second_learner"><a class="viewcode-back" href="../../multidr.html#multidr.tdr.TDR.set_second_learner">[docs]</a>    <span class="k">def</span> <span class="nf">set_second_learner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">second_learner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a method for the second DR.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        second_learner: Class Object for DR, optional, (default=None)</span>
+<span class="sd">            Dimensionality reduction class object for the second DR step. Any class</span>
+<span class="sd">            object that has fit_transform as a class method (e.g., UMAP in</span>
+<span class="sd">            umap-learn). If None, UMAP is set as a learner (i.e.,</span>
+<span class="sd">            UMAP(n_components=2)).</span>
+<span class="sd">            Also, to set a different DR for individual modes, you can input as a</span>
+<span class="sd">            dict. e.g., {&#39;t&#39;: UMAP(n_components=2), &#39;n&#39;: PCA(n_components=2), &#39;d&#39;:</span>
+<span class="sd">            TSNE(n_components=2)}</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">second_learner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">UMAP</span><span class="p">(),</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">UMAP</span><span class="p">(),</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">UMAP</span><span class="p">()}</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">second_learner</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">second_learner</span><span class="p">),</span>
+                <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">second_learner</span><span class="p">),</span>
+                <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">second_learner</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_learner</span> <span class="o">=</span> <span class="n">second_learner</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Author
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

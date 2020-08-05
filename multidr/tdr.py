@@ -6,6 +6,105 @@ from umap import UMAP
 
 
 class TDR():
+    """TDR: Two-step dimensionality reduction (DR) to project a third-order
+    tensor onto a lower-dimensional space
+
+    Parameters
+    ----------
+    first_learner: Class Object for DR, optional, (default=None)
+        Dimensionality reduction class object for the first DR step. Any class
+        object that has fit_transform as a class method (e.g., PCA in
+        scikit-learn). If None, sklearn's PCA is set as a learner (i.e.,
+        PCA(n_components=1)).
+        Also, to set a different DR for individual modes, you can input as a
+        dict. e.g., {'t': PCA(n_components=1), 'n': PCA(n_components=1), 'd':
+        PCA(n_components=1)}
+    second_learner: Class Object for DR, optional, (default=None)
+        Dimensionality reduction class object for the second DR step. Any class
+        object that has fit_transform as a class method (e.g., UMAP in
+        umap-learn). If None, UMAP is set as a learner (i.e.,
+        UMAP(n_components=2)).
+        Also, to set a different DR for individual modes, you can input as a
+        dict. e.g., {'t': UMAP(n_components=2), 'n': PCA(n_components=2), 'd':
+        TSNE(n_components=2)}
+    Attributes
+    ----------
+    first_learner: the same with the input parameter one.
+    second_learner: the same with the input parameter one.
+    Y_tn: ndarray, shape (n_time_points, n_instances)
+        The matrix Y obtained by applying the first DR along a variable mode.
+        Rows and columns correspond to time points and intances, repectively.
+    Y_nd: ndarray, shape (n_instances, n_variables)
+        The matrix Y obtained by applying the first DR along a time mode.
+        Rows and columns correspond to intances and variables, repectively.
+    Y_dt: ndarray, shape (n_variables, n_time_points)
+        The matrix Y obtained by applying the first DR along an instance mode.
+        Rows and columns correspond to variables and time points, repectively.
+    Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along a variable mode
+        and then the second DR along a time mode (1st DR : d, 2nd DR: t).
+    Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along a time mode
+        and then the second DR along a variable mode (1st DR: t, 2nd DR: d).
+    Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along an instance mode
+        and then the second DR along a time mode (1st DR: n, 2nd DR: t).
+    Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along a time mode
+        and then the second DR along an instance mode (1st DR: t, 2nd DR: n).
+    Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along a variable mode
+        and then the second DR along an instance mode (1st DR: d, 2nd DR: n).
+    Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)
+        The matrix Z obtained by applying the first DR along an instance mode
+        and then the second DR along a variable mode (1st DR: n, 2nd DR: d).
+    ----------
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> from sklearn.decomposition import PCA
+    >>> from umap import UMAP
+
+    >>> from multidr.tdr import TDR
+
+    >>> def plot_results(results):
+    ...     plt.figure(figsize=(8, 6))
+    ...     for i, Z in enumerate(
+    ...         ['Z_n_dt', 'Z_n_td', 'Z_d_nt', 'Z_d_tn', 'Z_t_dn', 'Z_t_nd']):
+    ...         plt.subplot(2, 3, i + 1)
+    ...         plt.scatter(results[Z][:, 0], results[Z][:, 1], s=5, c='#84B5B2')
+    ...         if Z == 'Z_n_dt':
+    ...             plt.title('Instance sim ' r'$v^{(D \rightarrow T)}_{n}$')
+    ...         elif Z == 'Z_n_td':
+    ...             plt.title('Instance sim ' r'$v^{(T \rightarrow D)}_{n}$')
+    ...         elif Z == 'Z_d_nt':
+    ...             plt.title('Variable sim ' r'$v^{(N \rightarrow T)}_{d}$')
+    ...         elif Z == 'Z_d_tn':
+    ...             plt.title('Variable sim ' r'$v^{(T \rightarrow N)}_{d}$')
+    ...         elif Z == 'Z_t_dn':
+    ...             plt.title('Time point sim ' r'$v^{(D \rightarrow N)}_{t}$')
+    ...         elif Z == 'Z_t_nd':
+    ...             plt.title('Time point sim ' r'$v^{(N \rightarrow D)}_{t}$')
+    ...         plt.xticks([])
+    ...         plt.yticks([])
+    ...     plt.tight_layout()
+    ...     plt.title('Two-step DR results')
+    ...     plt.show()
+
+    >>> X = np.load('./data/air_quality/tensor.npy')
+    >>> tdr = TDR(first_learner=PCA(n_components=1),
+    ...           second_learner=UMAP(n_components=2,
+    ...                               n_neighbors=7,
+    ...                               min_dist=0.15))
+
+    >>> results = tdr.fit_transform(X,
+    ...                             first_scaling=True,
+    ...                             second_scaling=False,
+    ...                             verbose=True)
+
+    >>> plot_results(results)
+    """
     def __init__(self, first_learner=None, second_learner=None):
         self.first_learner = None
         self.second_learner = None
@@ -27,6 +126,45 @@ class TDR():
                       first_scaling=True,
                       second_scaling=True,
                       verbose=False):
+        """Apply the first and second DR and then return all DR results of 6
+        patterns.
+
+        Parameters
+        ----------
+        X: array-like, shape(n_time_points, n_instances, n_variables)
+            Input third-order tensor.
+        first_scaling: boolean or dict of booleans, optional, default=True
+            If True, apply starndarziation before applying the first DR.
+            To set scaling for individual modes, you can input as a dict. e.g.,
+            {'t': False, 'n': False, 'd': True}
+        second_scaling: boolean or dict of booleans, optional, default=True
+            If True, apply starndarziation before applying the second DR.
+            To set scaling for individual modes, you can input as a dict. e.g.,
+            {'t': False, 'n': False, 'd': True}
+        verbose: boolean, optional, default=False
+            If True, print the progress of two-step DR, etc.
+        Returns
+        -------
+        Dict of {"Z_n_dt", "Z_n_td", "Z_d_nt", "Z_d_tn", "Z_t_dn", "Z_t_nd"}.
+            Z_n_dt: ndarray, shape (n_instances, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along a variable mode
+                and then the second DR along a time mode (1st DR : d, 2nd DR: t).
+            Z_n_td: ndarray, shape (n_instances, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along a time mode
+                and then the second DR along a variable mode (1st DR: t, 2nd DR: d).
+            Z_d_nt: ndarray, shape (n_variables, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along an instance mode
+                and then the second DR along a time mode (1st DR: n, 2nd DR: t).
+            Z_d_tn: ndarray, shape (n_variables, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along a time mode
+                and then the second DR along an instance mode (1st DR: t, 2nd DR: n).
+            Z_t_dn: ndarray, shape (n_time_points, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along a variable mode
+                and then the second DR along an instance mode (1st DR: d, 2nd DR: n).
+            Z_t_nd: ndarray, shape (n_time_points, n_components_of_2nd_DR)
+                The matrix Z obtained by applying the first DR along an instance mode
+                and then the second DR along a variable mode (1st DR: n, 2nd DR: d).
+        """
         self.learn_first_repr(X, scaling=first_scaling, verbose=verbose)
         self.learn_second_repr(self.Y_tn,
                                self.Y_nd,
@@ -44,6 +182,23 @@ class TDR():
         }
 
     def learn_first_repr(self, X, scaling=True, verbose=False):
+        """Apply the first DR to learn Y_tn, Y_nd, Y_dt.
+
+        Parameters
+        ----------
+        X: array-like, shape(n_time_points, n_instances, n_variables)
+            Input third-order tensor.
+        scaling: boolean or dict of booleans, optional, default=True
+            If True, apply starndarziation before applying the first DR.
+            To set scaling for individual modes, you can input as a dict. e.g.,
+            {'t': False, 'n': False, 'd': True}
+        verbose: boolean, optional, default=False
+            If True, print the progress of two-step DR, etc.
+        Returns
+        -------
+        self
+        """
+
         T, N, D = X.shape
         X_tn_d = np.zeros((T * N, D))
         X_nd_t = np.zeros((N * D, T))
@@ -108,7 +263,33 @@ class TDR():
         if verbose:
             print("first repr done")
 
+        return self
+
     def learn_second_repr(self, Y_tn, Y_nd, Y_dt, scaling=True, verbose=False):
+        """Apply the first DR to learn Y_tn, Y_nd, Y_dt.
+
+        Parameters
+        ----------
+        Y_tn: ndarray, shape (n_time_points, n_instances)
+            The matrix Y obtained by applying the first DR along a variable mode.
+            Rows and columns correspond to time points and intances, repectively.
+        Y_nd: ndarray, shape (n_instances, n_variables)
+            The matrix Y obtained by applying the first DR along a time mode.
+            Rows and columns correspond to intances and variables, repectively.
+        Y_dt: ndarray, shape (n_variables, n_time_points)
+            The matrix Y obtained by applying the first DR along an instance mode.
+            Rows and columns correspond to variables and time points, repectively.
+        scaling: boolean or dict of booleans, optional, default=True
+            If True, apply starndarziation before applying the second DR.
+            To set scaling for individual modes, you can input as a dict. e.g.,
+            {'t': False, 'n': False, 'd': True}
+        verbose: boolean, optional, default=False
+            If True, print the progress of two-step DR, etc.
+        Returns
+        -------
+        self
+        """
+
         # set scaler
         scl = {'t': lambda a: a, 'n': lambda a: a, 'd': lambda a: a}
         if type(scaling) is dict:
@@ -151,7 +332,25 @@ class TDR():
         if verbose:
             print("second repr done")
 
+        return self
+
     def set_first_learner(self, first_learner):
+        """Set a method for the first DR.
+
+        Parameters
+        ----------
+        first_learner: Class Object for DR
+            Dimensionality reduction class object for the first DR step. Any class
+            object that has fit_transform as a class method (e.g., PCA in
+            scikit-learn). If None, sklearn's PCA is set as a learner (i.e.,
+            PCA(n_components=1)).
+            Also, to set a different DR for individual modes, you can input as a
+            dict. e.g., {'t': PCA(n_components=1), 'n': PCA(n_components=1), 'd':
+            PCA(n_components=1)}
+        Returns
+        -------
+        self
+        """
         if first_learner is None:
             self.first_learner = {
                 'n': PCA(n_components=1),
@@ -167,7 +366,25 @@ class TDR():
         else:
             self.first_learner = first_learner
 
+        return self
+
     def set_second_learner(self, second_learner):
+        """Set a method for the second DR.
+
+        Parameters
+        ----------
+        second_learner: Class Object for DR, optional, (default=None)
+            Dimensionality reduction class object for the second DR step. Any class
+            object that has fit_transform as a class method (e.g., UMAP in
+            umap-learn). If None, UMAP is set as a learner (i.e.,
+            UMAP(n_components=2)).
+            Also, to set a different DR for individual modes, you can input as a
+            dict. e.g., {'t': UMAP(n_components=2), 'n': PCA(n_components=2), 'd':
+            TSNE(n_components=2)}
+        Returns
+        -------
+        self
+        """
         if second_learner is None:
             self.second_learner = {'n': UMAP(), 'd': UMAP(), 't': UMAP()}
         elif type(second_learner) is not dict:
@@ -178,3 +395,5 @@ class TDR():
             }
         else:
             self.second_learner = second_learner
+
+        return self
