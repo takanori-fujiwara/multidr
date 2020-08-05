@@ -9,15 +9,15 @@ class TDR():
     def __init__(self, first_learner=None, second_learner=None):
         self.first_learner = None
         self.second_learner = None
-        self.X_tn = None
-        self.X_nd = None
-        self.X_dt = None
-        self.Y_n_dt = None
-        self.Y_n_td = None
-        self.Y_d_nt = None
-        self.Y_d_tn = None
-        self.Y_t_dn = None
-        self.Y_t_nd = None
+        self.Y_tn = None
+        self.Y_nd = None
+        self.Y_dt = None
+        self.Z_n_dt = None
+        self.Z_n_td = None
+        self.Z_d_nt = None
+        self.Z_d_tn = None
+        self.Z_t_dn = None
+        self.Z_t_nd = None
 
         self.set_first_learner(first_learner)
         self.set_second_learner(second_learner)
@@ -28,19 +28,19 @@ class TDR():
                       second_scaling=True,
                       verbose=False):
         self.learn_first_repr(X, scaling=first_scaling, verbose=verbose)
-        self.learn_second_repr(self.X_tn,
-                               self.X_nd,
-                               self.X_dt,
+        self.learn_second_repr(self.Y_tn,
+                               self.Y_nd,
+                               self.Y_dt,
                                scaling=second_scaling,
                                verbose=verbose)
 
         return {
-            "Y_n_dt": self.Y_n_dt,
-            "Y_n_td": self.Y_n_td,
-            "Y_d_nt": self.Y_d_nt,
-            "Y_d_tn": self.Y_d_tn,
-            "Y_t_dn": self.Y_t_dn,
-            "Y_t_nd": self.Y_t_nd
+            "Z_n_dt": self.Z_n_dt,
+            "Z_n_td": self.Z_n_td,
+            "Z_d_nt": self.Z_d_nt,
+            "Z_d_tn": self.Z_d_tn,
+            "Z_t_dn": self.Z_t_dn,
+            "Z_t_nd": self.Z_t_nd
         }
 
     def learn_first_repr(self, X, scaling=True, verbose=False):
@@ -72,43 +72,43 @@ class TDR():
             scl['n'] = preprocessing.scale
 
         # first DR
-        Y_nd_t = self.first_learner['t'].fit_transform(scl['t'](X_nd_t))
-        Y_dt_n = self.first_learner['n'].fit_transform(scl['n'](X_dt_n))
-        Y_tn_d = self.first_learner['d'].fit_transform(scl['d'](X_tn_d))
+        y_nd_t = self.first_learner['t'].fit_transform(scl['t'](X_nd_t))
+        y_dt_n = self.first_learner['n'].fit_transform(scl['n'](X_dt_n))
+        y_tn_d = self.first_learner['d'].fit_transform(scl['d'](X_tn_d))
         if verbose:
             if 'explained_variance_ratio_' in self.first_learner['t'].__dict__:
-                print("exp var ratio of X_nd_t:",
+                print("exp var ratio for compression of time ponts:",
                       self.first_learner['t'].explained_variance_ratio_)
             if 'explained_variance_ratio_' in self.first_learner['n'].__dict__:
-                print("exp var ratio of X_dt_n:",
+                print("exp var ratio for compression of instances",
                       self.first_learner['n'].explained_variance_ratio_)
             if 'explained_variance_ratio_' in self.first_learner['d'].__dict__:
-                print("exp var ratio of X_tn_d:",
+                print("exp var ratio for compression of variables:",
                       self.first_learner['d'].explained_variance_ratio_)
 
         # sign flip if the weights tend to be negative
         if 'components_' in self.first_learner['t'].__dict__:
             if np.sum(self.first_learner['t'].components_) < 0:
                 self.first_learner['t'].components_ *= -1
-                Y_nd_t *= -1
+                y_nd_t *= -1
         if 'components_' in self.first_learner['n'].__dict__:
             if np.sum(self.first_learner['n'].components_) < 0:
                 self.first_learner['n'].components_ *= -1
-                Y_dt_n *= -1
+                y_dt_n *= -1
         if 'components_' in self.first_learner['d'].__dict__:
             if np.sum(self.first_learner['d'].components_) < 0:
                 self.first_learner['d'].components_ *= -1
-                Y_tn_d *= -1
+                y_tn_d *= -1
 
         # folding
-        self.X_tn = Y_tn_d.reshape((T, N))
-        self.X_nd = Y_nd_t.reshape((N, D))
-        self.X_dt = Y_dt_n.reshape((D, T))
+        self.Y_tn = y_tn_d.reshape((T, N))
+        self.Y_nd = y_nd_t.reshape((N, D))
+        self.Y_dt = y_dt_n.reshape((D, T))
 
         if verbose:
             print("first repr done")
 
-    def learn_second_repr(self, X_tn, X_nd, X_dt, scaling=True, verbose=False):
+    def learn_second_repr(self, Y_tn, Y_nd, Y_dt, scaling=True, verbose=False):
         # set scaler
         scl = {'t': lambda a: a, 'n': lambda a: a, 'd': lambda a: a}
         if type(scaling) is dict:
@@ -121,32 +121,32 @@ class TDR():
             scl['n'] = preprocessing.scale
 
         # second DR
-        self.Y_n_dt = self.second_learner['t'].fit_transform(scl['t'](
-            X_tn.transpose()))
+        self.Z_n_dt = self.second_learner['t'].fit_transform(scl['t'](
+            Y_tn.transpose()))
         if verbose:
-            print("Y_n_dt done")
+            print("Z_n_dt done")
 
-        self.Y_d_nt = self.second_learner['t'].fit_transform(scl['t'](X_dt))
+        self.Z_d_nt = self.second_learner['t'].fit_transform(scl['t'](Y_dt))
         if verbose:
-            print("Y_d_nt done")
+            print("Z_d_nt done")
 
-        self.Y_t_dn = self.second_learner['n'].fit_transform(scl['n'](X_tn))
+        self.Z_t_dn = self.second_learner['n'].fit_transform(scl['n'](Y_tn))
         if verbose:
-            print("Y_t_dn done")
+            print("Z_t_dn done")
 
-        self.Y_d_tn = self.second_learner['n'].fit_transform(scl['n'](
-            X_nd.transpose()))
+        self.Z_d_tn = self.second_learner['n'].fit_transform(scl['n'](
+            Y_nd.transpose()))
         if verbose:
-            print("Y_d_tn done")
+            print("Z_d_tn done")
 
-        self.Y_t_nd = self.second_learner['d'].fit_transform(scl['d'](
-            X_dt.transpose()))
+        self.Z_t_nd = self.second_learner['d'].fit_transform(scl['d'](
+            Y_dt.transpose()))
         if verbose:
-            print("Y_t_nd done")
+            print("Z_t_nd done")
 
-        self.Y_n_td = self.second_learner['d'].fit_transform(scl['d'](X_nd))
+        self.Z_n_td = self.second_learner['d'].fit_transform(scl['d'](Y_nd))
         if verbose:
-            print("Y_n_td done")
+            print("Z_n_td done")
 
         if verbose:
             print("second repr done")

@@ -10,25 +10,26 @@ from multidr.cl import CL
 
 def plot_results(results):
     plt.figure(figsize=(8, 6))
-    for i, Y in enumerate(
-        ['Y_n_dt', 'Y_n_td', 'Y_d_nt', 'Y_d_tn', 'Y_t_dn', 'Y_t_nd']):
+    for i, Z in enumerate(
+        ['Z_n_dt', 'Z_n_td', 'Z_d_nt', 'Z_d_tn', 'Z_t_dn', 'Z_t_nd']):
         plt.subplot(2, 3, i + 1)
-        plt.scatter(results[Y][:, 0], results[Y][:, 1], s=5, c='#84B5B2')
-        if Y == 'Y_n_dt':
+        plt.scatter(results[Z][:, 0], results[Z][:, 1], s=5, c='#84B5B2')
+        if Z == 'Z_n_dt':
             plt.title('Instance sim ' r'$v^{(D \rightarrow T)}_{n}$')
-        elif Y == 'Y_n_td':
+        elif Z == 'Z_n_td':
             plt.title('Instance sim ' r'$v^{(T \rightarrow D)}_{n}$')
-        elif Y == 'Y_d_nt':
+        elif Z == 'Z_d_nt':
             plt.title('Variable sim ' r'$v^{(N \rightarrow T)}_{d}$')
-        elif Y == 'Y_d_tn':
+        elif Z == 'Z_d_tn':
             plt.title('Variable sim ' r'$v^{(T \rightarrow N)}_{d}$')
-        elif Y == 'Y_t_dn':
+        elif Z == 'Z_t_dn':
             plt.title('Time point sim ' r'$v^{(D \rightarrow N)}_{t}$')
-        elif Y == 'Y_t_nd':
+        elif Z == 'Z_t_nd':
             plt.title('Time point sim ' r'$v^{(N \rightarrow D)}_{t}$')
         plt.xticks([])
         plt.yticks([])
     plt.tight_layout()
+    plt.title('Two-step DR results')
     plt.show()
 
 
@@ -85,21 +86,27 @@ print('d: ' + str(tdr.first_learner['d'].explained_variance_ratio_[0]))
 ## 2-2. feature contributions
 clustering = SpectralClustering(n_clusters=3,
                                 assign_labels="discretize",
-                                random_state=0).fit(results['Y_n_dt'])
+                                random_state=0).fit(results['Z_n_dt'])
 plt.figure(figsize=(6, 6))
-plt.scatter(results['Y_n_dt'][:, 0],
-            results['Y_n_dt'][:, 1],
+plt.scatter(results['Z_n_dt'][:, 0],
+            results['Z_n_dt'][:, 1],
             s=5,
             c=clustering.labels_)
+plt.title('Z_n_dt with spectral clustering')
 plt.show()
 
-X_nt = tdr.X_tn.transpose()
-cluster1 = X_nt[clustering.labels_ == 1, :]
-others = X_nt[clustering.labels_ != 1, :]
+Y_nt = tdr.Y_tn.transpose()
 
 cl = CL()
-cl.fit(cluster1, others, var_thres_ratio=0.5, max_log_alpha=2)
-
 plt.figure(figsize=(8, 4))
-plt.plot(cl.fcs)
+
+for cluster_id in np.unique(clustering.labels_):
+    cluster = Y_nt[clustering.labels_ == cluster_id, :]
+    others = Y_nt[clustering.labels_ != cluster_id, :]
+    cl.fit(cluster, others, var_thres_ratio=0.5, max_log_alpha=2)
+    plt.plot(cl.fcs, c=plt.get_cmap('Accent')(cluster_id))
+
+plt.xlabel('time')
+plt.ylabel('Feature contribution (without scaling)')
+plt.title('Feature cotributions')
 plt.show()
