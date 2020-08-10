@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel='stylesheet' href='style/style.css'>
+  <script src='https://d3js.org/d3.v5.min.js'></script>
+  <script src="https://d3js.org/d3-array.v2.min.js"></script>
+  <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <title>MulTiDR Visual Interface</title>
+</head>
+
+<body>
+  <div class='wrapper_main'>
+    <div class='wrapper_top'>
+      <div id='dr_view'>
+        <div class='view_title'>DR Results</div>
+        <div id='result_selection'>
+          Data
+          <select id='file_selection'>
+          </select>
+          DR result
+          <select id='dr_type'>
+            <option value='instance'>instance similarities</option>
+            <option value='variable'>variable similarities</option>
+            <option value='time'>time similarities</option>
+          </select>
+        </div>
+        <svg id='dr_legend'></svg>
+        <div class='divide_col2'>
+          <div class='dr_title' id='dr_title1'></div>
+          <canvas class='dr_canvas' id='dr_canvas1'></canvas>
+        </div>
+        <div class='divide_col2'>
+          <div class='dr_title' id='dr_title2'></div>
+          <canvas class='dr_canvas' id='dr_canvas2'></canvas>
+        </div>
+      </div>
+      <div id='info_view'>
+        <div class='view_title'>Selected Points' Info</div>
+        <svg id='info_view_legend'></svg>
+        <div id='info_svg'></div>
+      </div>
+    </div>
+    <div id='fc_view'>
+      <div class='view_title'>Feature Contributions to Contrasting Selected Points</div>
+      <div id='fc_view_left'>
+        <div id='fc_svg_left'></div>
+      </div>
+      <div id='fc_view_right'>
+        <div id='fc_svg_right'></div>
+      </div>
+      <svg id='fc_legend'></svg>
+      <div id='fc_view_selection' class='view_selection'>
+        <input type="checkbox" id="checkbox_fc_view_left" name="checkbox_fc_view_left" value="left" checked>
+        <label for="checkbox_fc_view_left">View for Left DR</label>
+        <br />
+        <input type="checkbox" id="checkbox_fc_view_right" name="checkbox_fc_view_right" value="right" checked>
+        <label for="checkbox_fc_view_right">View for Right DR</label>
+      </div>
+    </div>
+    <div id='pc_view'>
+      <div class='view_title'>Principal Component of 1st DR</div>
+      <div id='pc_view_left'>
+        <div id='pc_svg_left'></div>
+      </div>
+      <div id='pc_view_right'>
+        <div id='pc_svg_right'></div>
+      </div>
+      <svg id='pc_legend'></svg>
+      <div id='pc_view_selection' class='view_selection'>
+        <input type="checkbox" id="checkbox_pc_view_left" name="checkbox_pc_view_left" value="left" checked>
+        <label for="checkbox_pc_view_left">View for Left DR</label>
+        <br />
+        <input type="checkbox" id="checkbox_pc_view_right" name="checkbox_pc_view_right" value="right" checked>
+        <label for="checkbox_pc_view_right">View for Right DR</label>
+      </div>
+    </div>
+    <div id='hist_svg'></div>
+  </div>
+
+  <script src='script/main.js' type='module'></script>
+</body>
+
+</html>

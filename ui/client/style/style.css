@@ -1,0 +1,288 @@
+html, body {
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  width: 100%;
+  height: 100%;
+  /* margin: 0 !important; */
+}
+
+select {
+  height: 18px;
+  font-size: 11px;
+}
+
+.wrapper_main {
+  width: 98.5%;
+  height: 97%;
+  float: left;
+}
+
+.wrapper_top {
+  float: left;
+  width: 100%;
+  height: 58%;
+}
+
+.view_title {
+  position: absolute;
+  right: 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 6px;
+  font-size: 10px;
+  color: #FFFFFF;
+  background-color: #52617B;
+}
+
+.divide_col2 {
+  float: left;
+  width: 50%;
+  height: 100%;
+}
+
+#dr_title2 {
+  margin-left: -40px;
+}
+
+#dr_canvas2 {
+  margin-left: -40px;
+}
+
+#result_selection {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+#dr_view {
+  float: left;
+  position: relative;
+  width: 70%;
+  height: 100%;
+  padding-top: 0px;
+  border-style: solid;
+  border-width: thin;
+  border-color: #DDDDDD;
+  border-bottom-color: #FFFFFF;
+}
+
+.dr_title {
+  float: left;
+  position: relative;
+  top: 12%;
+  left: 50%;
+  transform: translate(-55%, -50%);
+}
+
+.dr_canvas {
+  float: left;
+  position: relative;
+  width: 80%;
+  height: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%, -50%);
+  border-style: solid;
+  border-width: thin;
+  border-color: #DDDDDD;
+}
+
+#dr_legend {
+  position: absolute;
+  width: 70px;
+  height: 180px;
+  right: 10px;
+  bottom: 2px;
+  z-index: 10;
+}
+
+#info_view {
+  display: flex;
+  position: relative;
+  width: auto;
+  height: 100%;
+  flex: 1;
+  border-right-style: solid;
+  border-top-style: solid;
+  border-bottom: solid;
+  border-width: thin;
+  border-color: #DDDDDD;
+  border-left-color: #FFFFFF;
+  border-bottom-color: #FFFFFF;
+}
+
+#info_svg {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#info_view_legend {
+  position: absolute;
+  width: 70px;
+  height: 100px;
+  right: 2px;
+  bottom: 2px;
+  z-index: 10;
+}
+
+#fc_view {
+  display: flex;
+  position: relative;
+  width: auto;
+  height: 20%;
+  border-style: solid;
+  border-width: thin;
+  border-color: #DDDDDD;
+  border-bottom-color: #FFFFFF;
+}
+
+#fc_view_left {
+  display: flex;
+  position: relative;
+  width: 45%;
+  height: 100%;
+}
+
+#fc_view_right {
+  display: flex;
+  position: relative;
+  width: 45%;
+  height: 100%;
+}
+
+#fc_svg_left {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#fc_svg_right {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#fc_legend {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  right: 2px;
+  bottom: 20px;
+  z-index: 10;
+}
+
+#pc_view {
+  display: flex;
+  position: relative;
+  width: auto;
+  height: 20%;
+  border-style: solid;
+  border-width: thin;
+  border-color: #DDDDDD;
+}
+
+#pc_view_left {
+  display: flex;
+  position: relative;
+  width: 45%;
+  height: 100%;
+}
+
+#pc_view_right {
+  display: flex;
+  position: relative;
+  width: 45%;
+  height: 100%;
+}
+
+#pc_legend {
+  position: absolute;
+  width: 130px;
+  height: 100px;
+  right: 2px;
+  bottom: 20px;
+  z-index: 10;
+}
+
+#pc_svg_left {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#pc_svg_right {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+
+#fc_view_selection, #pc_view_selection {
+  position: absolute;
+  width: 100px;
+  height: 50px;
+  right: 2px;
+  top: 20px;
+  z-index: 10;
+  font-size: 9px;
+  color: #444444;
+}
+
+#hist_svg {
+  opacity: 0;
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.view_selection input[type="checkbox"] {
+  display: none;
+}
+
+.view_selection input[type="checkbox"]+label {
+  display: none;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-bottom: 3px;
+  padding-left: 20px;
+  padding-right: 5px;
+}
+
+.view_selection input[type="checkbox"]+label::before {
+  content: "";
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  width: 11px;
+  height: 11px;
+  margin-top: -8px;
+  left: 5px;
+  top: 50%;
+  border: 1px solid;
+  border-radius: 2px;
+  border-color: #88888;
+  background-color: #ffffff;
+}
+
+.view_selection input[type="checkbox"]:checked+label::after {
+  content: "";
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  width: 8px;
+  height: 5px;
+  margin-top: -6px;
+  top: 50%;
+  left: 7px;
+  transform: rotate(-45deg);
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+  border-color: #585753;
+}
