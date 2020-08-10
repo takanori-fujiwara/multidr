@@ -99,7 +99,7 @@ export const initModel = (model, instances, variables, timePoints, siViewInfo, f
       const r = model.renderingData.drs[drType];
       const inst = model.data[key][drType];
 
-      r.vertices = inst.map(elm => elm.pos).flat();
+      r.vertices = inst.map(elm => elm.embPos).flat();
       r.sizes = inst.map(elm => elm.size || r.defaultSize);
       r.colors = inst.map(elm => elm.color || r.defaultColor).flat();
       r.opacities = inst.map(elm => elm.opacity || r.defaultOpacity);

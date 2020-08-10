@@ -88,7 +88,7 @@ export const chart = (svgData, nClusters) => {
         .attr('id', 'popup')
         .attr('x', x(rackIdToCoord(d.rack).X) - 10)
         .attr('y', y(rackIdToCoord(d.rack).Y) - 5)
-        .text(`(x:${d.coord.x}, y:${d.coord.y}, a:${d.coord.a})`);
+        .text(`(x:${d.aux.x}, y:${d.aux.y}, a:${d.aux.a})`);
     })
     .on('mouseout', () => svg.select('#popup').remove());
 

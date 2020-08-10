@@ -58,11 +58,11 @@ export const chart = (svgData, nClusters) => {
 
   const datum = svgData.data;
 
-  const x = genX(datum.map(elm => elm.coord.x + 1), svgArea);
-  const y = genY(datum.map(elm => elm.coord.y + 1), svgArea);
+  const x = genX(datum.map(elm => elm.aux.x + 1), svgArea);
+  const y = genY(datum.map(elm => elm.aux.y + 1), svgArea);
 
-  const maxX = datum.reduce((maxVal, elm) => elm.coord.x > maxVal ? elm.coord.x : maxVal, 0);
-  const maxY = datum.reduce((maxVal, elm) => elm.coord.y > maxVal ? elm.coord.y : maxVal, 0);
+  const maxX = datum.reduce((maxVal, elm) => elm.aux.x > maxVal ? elm.aux.x : maxVal, 0);
+  const maxY = datum.reduce((maxVal, elm) => elm.aux.y > maxVal ? elm.aux.y : maxVal, 0);
   const unitW = svgArea.width / maxX
   const unitH = svgArea.height / maxY;
 
@@ -85,9 +85,9 @@ export const chart = (svgData, nClusters) => {
     .enter()
     .append('circle')
     .attr('cx', d => {
-      return projection([d.coord.y, d.coord.x])[0]
+      return projection([d.aux.y, d.aux.x])[0]
     })
-    .attr('cy', d => projection([d.coord.y, d.coord.x])[1])
+    .attr('cy', d => projection([d.aux.y, d.aux.x])[1])
     .attr('r', 8)
     .attr('fill', d =>
       percentColToD3Rgb(pallette[d.group]))
@@ -95,9 +95,9 @@ export const chart = (svgData, nClusters) => {
     .on('mouseover', (d, i) => {
       svg.append('text')
         .attr('id', 'popup')
-        .attr('x', x(d.coord.x))
-        .attr('y', y(d.coord.y) - 5)
-        .text(`(x:${d.coord.x}, y:${d.coord.y})`);
+        .attr('x', x(d.aux.x))
+        .attr('y', y(d.aux.y) - 5)
+        .text(`(x:${d.aux.x}, y:${d.aux.y})`);
     })
     .on('mouseout', () => svg.select('#popup').remove())
 

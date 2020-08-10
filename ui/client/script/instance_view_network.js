@@ -55,8 +55,8 @@ export const chart = (svgData, nClusters) => {
   const svg = svgData.svg.attr('viewBox', [0, 0, svgArea.width, svgArea.height]);
 
   const datum = svgData.data;
-  const x = genX(datum.map(elm => elm.coord.x), svgArea, [-1, 1]);
-  const y = genY(datum.map(elm => elm.coord.y), svgArea, [-1, 1]);
+  const x = genX(datum.map(elm => elm.aux.x), svgArea, [-1, 1]);
+  const y = genY(datum.map(elm => elm.aux.y), svgArea, [-1, 1]);
   const w = genW(undefined, 1.0, [0, 100]);
 
   for (const dtm of datum) {
@@ -73,8 +73,8 @@ export const chart = (svgData, nClusters) => {
       .data(lineInfo)
       .enter()
       .append('line')
-      .attr('x1', x(dtm.coord.x))
-      .attr('y1', y(dtm.coord.y))
+      .attr('x1', x(dtm.aux.x))
+      .attr('y1', y(dtm.aux.y))
       .attr('x2', d => x(d.x2))
       .attr('y2', d => y(d.y2))
       .attr('stroke', '#888888')
@@ -86,9 +86,9 @@ export const chart = (svgData, nClusters) => {
     .data(datum)
     .enter()
     .append('circle')
-    .attr('r', 4) // 4
-    .attr('cx', d => x(d.coord.x))
-    .attr('cy', d => y(d.coord.y))
+    .attr('r', 4)
+    .attr('cx', d => x(d.aux.x))
+    .attr('cy', d => y(d.aux.y))
     .attr('stroke', '#444444')
     .attr('stroke-width', 0.5)
     .attr('stroke-opacity', 1.0)
@@ -98,9 +98,9 @@ export const chart = (svgData, nClusters) => {
     .on('mouseover', (d, i) => {
       svg.append('text')
         .attr('id', 'popup')
-        .attr('x', x(d.coord.x) - 10)
-        .attr('y', y(d.coord.y) - 5)
-        .text(`x:${d.coord.x.toFixed(2)}, y:${d.coord.y.toFixed(2)}`);
+        .attr('x', x(d.aux.x) - 10)
+        .attr('y', y(d.aux.y) - 5)
+        .text(`x:${d.aux.x.toFixed(2)}, y:${d.aux.y.toFixed(2)}`);
     })
     .on('mouseout', () => svg.select('#popup').remove());
 
