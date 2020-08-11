@@ -83,11 +83,11 @@ export const chart = (svgData, embType, offsetX, offsetY, w, h) => {
     .call(yAxis);
 
   let xLabel = '';
-  if (embType === 'Y_n_dt' || embType === 'Y_t_dn') {
+  if (embType === 'Z_n_dt' || embType === 'Z_t_dn') {
     xLabel = 'variable PC value';
-  } else if (embType === 'Y_d_nt' || embType === 'Y_t_nd') {
+  } else if (embType === 'Z_d_nt' || embType === 'Z_t_nd') {
     xLabel = 'instance PC value';
-  } else if (embType === 'Y_n_td' || embType === 'Y_d_tn') {
+  } else if (embType === 'Z_n_td' || embType === 'Z_d_tn') {
     xLabel = 'time step PC value';
   }
 

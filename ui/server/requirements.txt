@@ -1,0 +1,11 @@
+###### Packages installable with pip ######
+numpy
+scipy
+uvloop
+websockets
+
+###### Other packages ######
+## ccpca: refer to https://github.com/takanori-fujiwara/ccpca
+## multidr: refer to https://github.com/takanori-fujiwara/multidr
+ccpca >= 0.13
+multidr >= 0.01

@@ -131,29 +131,29 @@ export const initRendererInfo = (targetView, linkedViews, wsInfo, infoSvgData,
     rd.renderers.line = genDrawLinesFunc(...toInfoForDrawLines(rd));
   }
 
-  if (targetView.embType === 'Y_n_dt' || targetView.embType === 'Y_n_td') {
-    if (modelData.instances.Y_n_dt.length != infoSvgData.data.length) {
+  if (targetView.embType === 'Z_n_dt' || targetView.embType === 'Z_n_td') {
+    if (modelData.instances.Z_n_dt.length != infoSvgData.data.length) {
       infoSvgData.data.length = 0;
-      for (const instance of modelData.instances.Y_n_dt) {
+      for (const instance of modelData.instances.Z_n_dt) {
         instance['group'] = 9
         infoSvgData.data.push(instance);
       };
     }
     state.instanceView.chart(infoSvgData, state.nGroups);
     drView.setLegend(state.nGroups);
-  } else if (targetView.embType === 'Y_d_nt' || targetView.embType === 'Y_d_tn') {
-    if (modelData.variables.Y_d_nt.length != infoSvgData.data.length) {
+  } else if (targetView.embType === 'Z_d_nt' || targetView.embType === 'Z_d_tn') {
+    if (modelData.variables.Z_d_nt.length != infoSvgData.data.length) {
       infoSvgData.data.length = 0;
-      for (const variable of modelData.variables.Y_d_nt) {
+      for (const variable of modelData.variables.Z_d_nt) {
         variable['group'] = 9
         infoSvgData.data.push(variable);
       };
     }
     state.variableView.chart(infoSvgData);
-  } else if (targetView.embType === 'Y_t_nd' || targetView.embType === 'Y_t_dn') {
-    if (modelData.timePoints.Y_t_nd.length != infoSvgData.data.length) {
+  } else if (targetView.embType === 'Z_t_nd' || targetView.embType === 'Z_t_dn') {
+    if (modelData.timePoints.Z_t_nd.length != infoSvgData.data.length) {
       infoSvgData.data.length = 0;
-      for (const timePoint of modelData.timePoints.Y_t_nd) {
+      for (const timePoint of modelData.timePoints.Z_t_nd) {
         timePoint['group'] = 9;
         infoSvgData.data.push(timePoint);
       };
@@ -179,11 +179,11 @@ export const initRendererInfo = (targetView, linkedViews, wsInfo, infoSvgData,
       infoSvgData.data[i].group = 9;
     }
 
-    if (targetView.embType === 'Y_n_dt' || targetView.embType === 'Y_n_td') {
+    if (targetView.embType === 'Z_n_dt' || targetView.embType === 'Z_n_td') {
       state.instanceView.chart(infoSvgData, state.nGroups);
-    } else if (targetView.embType === 'Y_d_nt' || targetView.embType === 'Y_d_tn') {
+    } else if (targetView.embType === 'Z_d_nt' || targetView.embType === 'Z_d_tn') {
       state.variableView.chart(infoSvgData, state.nGroups);
-    } else if (targetView.embType === 'Y_t_nd' || targetView.embType === 'Y_t_dn') {
+    } else if (targetView.embType === 'Z_t_nd' || targetView.embType === 'Z_t_dn') {
       state.timeView.chart(infoSvgData, state.nGroups);
     }
     drView.setLegend(state.nGroups);
@@ -246,11 +246,11 @@ export const initRendererInfo = (targetView, linkedViews, wsInfo, infoSvgData,
 
         state.nGroups++;
 
-        if (targetView.embType === 'Y_n_dt' || targetView.embType === 'Y_n_td') {
+        if (targetView.embType === 'Z_n_dt' || targetView.embType === 'Z_n_td') {
           state.instanceView.chart(infoSvgData, state.nGroups);
-        } else if (targetView.embType === 'Y_d_nt' || targetView.embType === 'Y_d_tn') {
+        } else if (targetView.embType === 'Z_d_nt' || targetView.embType === 'Z_d_tn') {
           state.variableView.chart(infoSvgData, state.nGroups);
-        } else if (targetView.embType === 'Y_t_nd' || targetView.embType === 'Y_t_dn') {
+        } else if (targetView.embType === 'Z_t_nd' || targetView.embType === 'Z_t_dn') {
           state.timeView.chart(infoSvgData, state.nGroups);
         }
         drView.setLegend(state.nGroups);

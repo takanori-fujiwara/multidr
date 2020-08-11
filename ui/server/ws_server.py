@@ -39,18 +39,18 @@ class Message(IntEnum):
 
 def _load_data_by_emb_type(emb_type, data_key):
     X = None
-    if emb_type == 'Y_n_dt':
-        X = np.load('./data/' + data_key + '_X_tn.npy').transpose()
-    elif emb_type == 'Y_n_td':
-        X = np.load('./data/' + data_key + '_X_nd.npy')
-    elif emb_type == 'Y_d_nt':
-        X = np.load('./data/' + data_key + '_X_dt.npy')
-    elif emb_type == 'Y_d_tn':
-        X = np.load('./data/' + data_key + '_X_nd.npy').transpose()
-    elif emb_type == 'Y_t_dn':
-        X = np.load('./data/' + data_key + '_X_tn.npy')
-    elif emb_type == 'Y_t_nd':
-        X = np.load('./data/' + data_key + '_X_dt.npy').transpose()
+    if emb_type == 'Z_n_dt':
+        X = np.load('./data/' + data_key + '_Y_tn.npy').transpose()
+    elif emb_type == 'Z_n_td':
+        X = np.load('./data/' + data_key + '_Y_nd.npy')
+    elif emb_type == 'Z_d_nt':
+        X = np.load('./data/' + data_key + '_Y_dt.npy')
+    elif emb_type == 'Z_d_tn':
+        X = np.load('./data/' + data_key + '_Y_nd.npy').transpose()
+    elif emb_type == 'Z_t_dn':
+        X = np.load('./data/' + data_key + '_Y_tn.npy')
+    elif emb_type == 'Z_t_nd':
+        X = np.load('./data/' + data_key + '_Y_dt.npy').transpose()
     return X
 
 

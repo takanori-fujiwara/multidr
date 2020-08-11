@@ -42,8 +42,8 @@ const init = (dataKey, drType) => {
   //
   const websocketUrl = m.websocketUrl;
 
-  const drKey1 = drType === 'instance' ? 'Y_n_dt' : (drType === 'variable' ? 'Y_d_nt' : 'Y_t_dn');
-  const drKey2 = drType === 'instance' ? 'Y_n_td' : (drType === 'variable' ? 'Y_d_tn' : 'Y_t_nd');
+  const drKey1 = drType === 'instance' ? 'Z_n_dt' : (drType === 'variable' ? 'Z_d_nt' : 'Z_t_dn');
+  const drKey2 = drType === 'instance' ? 'Z_n_td' : (drType === 'variable' ? 'Z_d_tn' : 'Z_t_nd');
 
   fetch(`../data/${dataKey}.json`)
     .then(response => response.json())

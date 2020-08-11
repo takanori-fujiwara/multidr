@@ -30,13 +30,13 @@ export const chart = (svgData, embType, groupIndices, wsInfo, modelData, nCluste
     if (data.length > 0) {
       const datum = data[0];
       const xData =
-        datum.map(d => secondDrType === 'd' ? (datum.length > 10 ? d.x : modelData.variables.Y_d_nt[d.x].name) :
-          (secondDrType === 't' ? d3.timeParse("%Y-%m-%d %H:%M:%S")(cleanDatetime(modelData.timePoints.Y_t_dn[d.x].time)) :
+        datum.map(d => secondDrType === 'd' ? (datum.length > 10 ? d.x : modelData.variables.Z_d_nt[d.x].name) :
+          (secondDrType === 't' ? d3.timeParse("%Y-%m-%d %H:%M:%S")(cleanDatetime(modelData.timePoints.Z_t_dn[d.x].time)) :
             (secondDrType === 'n' ? d.x : d.x)));
 
       const x = genX(xData, svgArea, undefined, secondDrType);
       const xAxis = secondDrType === 'd' && datum.length <= 10 ?
-        genXAxis(x, svgArea, datum.map(d => modelData.variables.Y_d_nt[d.x].name)) :
+        genXAxis(x, svgArea, datum.map(d => modelData.variables.Z_d_nt[d.x].name)) :
         genXAxis(x, svgArea);
       const y = genY(undefined, svgArea, [-1, 1]);
       const yAxis = genYAxis(y, svgArea);
@@ -132,9 +132,9 @@ export const chart = (svgData, embType, groupIndices, wsInfo, modelData, nCluste
               .attr('x', x(xData[i]) + 10)
               .attr('y', svgArea.height)
               .text(() =>
-                secondDrType === 'd' ? modelData.variables.Y_d_nt[i].name :
-                (secondDrType === 't' ? cleanDatetime(modelData.timePoints.Y_t_dn[i].time) :
-                  (secondDrType === 'n' ? JSON.stringify(modelData.instances.Y_n_dt[i].rack) : i)))
+                secondDrType === 'd' ? modelData.variables.Z_d_nt[i].name :
+                (secondDrType === 't' ? cleanDatetime(modelData.timePoints.Z_t_dn[i].time) :
+                  (secondDrType === 'n' ? JSON.stringify(modelData.instances.Z_n_dt[i].rack) : i)))
               .style('pointer-events', 'none');
             // handle websockets actions
             const bdRect = this.getBoundingClientRect();

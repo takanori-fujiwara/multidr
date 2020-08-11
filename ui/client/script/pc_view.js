@@ -24,15 +24,15 @@ export const chart = (svgData, firstDrType, modelData) => {
   }
 
   const xData =
-    datum.map(d => firstDrType === 'd' ? (datum.length > 10 ? d.x : modelData.variables.Y_d_nt[d.x].name) :
-      (firstDrType === 't' ? d3.timeParse("%Y-%m-%d %H:%M:%S")(cleanDatetime(modelData.timePoints.Y_t_dn[d.x].time)) :
+    datum.map(d => firstDrType === 'd' ? (datum.length > 10 ? d.x : modelData.variables.Z_d_nt[d.x].name) :
+      (firstDrType === 't' ? d3.timeParse("%Y-%m-%d %H:%M:%S")(cleanDatetime(modelData.timePoints.Z_t_dn[d.x].time)) :
         (firstDrType === 'n' ? d.x : d.x)));
 
   const explainedVarRatio = Math.floor(modelData.firstDrInfo.explainedVarianceRatio[firstDrType] * 100) / 100;
 
   const x = genX(xData, svgArea, undefined, firstDrType);
   const xAxis = firstDrType === 'd' && datum.length <= 10 ?
-    genXAxis(x, svgArea, datum.map(d => modelData.variables.Y_d_nt[d.x].name)) :
+    genXAxis(x, svgArea, datum.map(d => modelData.variables.Z_d_nt[d.x].name)) :
     genXAxis(x, svgArea);
   const yAbsMax = Math.max(...datum.map(elm => Math.abs(elm.pc)));
   const y = genY(undefined, svgArea, [-yAbsMax, yAbsMax]);
@@ -127,9 +127,9 @@ export const chart = (svgData, firstDrType, modelData) => {
           .attr('id', 'selected_name')
           .attr('x', x(xData[i]) - unitW * 0.5)
           .text(() =>
-            firstDrType === 'd' ? modelData.variables.Y_d_nt[d.x].name :
-            (firstDrType === 't' ? cleanDatetime(modelData.timePoints.Y_t_dn[d.x].time) :
-              (firstDrType === 'n' ? modelData.instances.Y_n_dt[d.x].name || JSON.stringify(modelData.instances.Y_n_dt[d.x].coord) : d.x)));
+            firstDrType === 'd' ? modelData.variables.Z_d_nt[d.x].name :
+            (firstDrType === 't' ? cleanDatetime(modelData.timePoints.Z_t_dn[d.x].time) :
+              (firstDrType === 'n' ? modelData.instances.Z_n_dt[d.x].name || JSON.stringify(modelData.instances.Z_n_dt[d.x].coord) : d.x)));
       }
     })
     .on('mouseout', function() {
