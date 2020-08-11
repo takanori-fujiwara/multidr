@@ -24,7 +24,7 @@ export const chart = (svgData, nClusters) => {
     .append('text')
     .attr('x', (d, i) => -28 + Math.floor(i / 20) * 100)
     .attr('y', (d, i) => (i % 20) * 15 + 15)
-    .text(d => d.name)
+    .text(d => d.name || i)
     .style('font-size', '10')
     .style('fill', d => percentColToD3Rgb(pallette[d.group]));
 
