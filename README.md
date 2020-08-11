@@ -70,6 +70,10 @@ Web-based Visual Interface Setup
 
 * Access to the url setup in the http server. For example, if you set an http server with the above command. You can acess with: http://localhost:8000/
 
+### How to Include New Datasets
+
+* Please, refer to ui/doc/data_format.md
+
 ******
 
 ## How to Cite
