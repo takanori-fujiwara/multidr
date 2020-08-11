@@ -5,7 +5,8 @@ import {
 
 export const initCanvas = canvasId => {
   const canvas = document.getElementById(canvasId);
-  const devicePixelRatio = window.devicePixelRatio || 1;
+  // const devicePixelRatio = window.devicePixelRatio || 1;
+  const devicePixelRatio = 2;
   canvas.width = canvas.clientWidth * devicePixelRatio;
   canvas.height = canvas.clientHeight * devicePixelRatio;
 

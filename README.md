@@ -29,8 +29,8 @@ Back-End Library Setup
 * If you want to use contrastive learning with a default setting (i.e., use of ccPCA), install ccPCA from: https://github.com/takanori-fujiwara/ccpca
 
 ### Usage
-* Import installed modules from python (e.g., `from multidr.tdr import TDR`). See sample.py for examples.
-* For detailed documentations, please see doc/index.html or directly see comments in multidr/tdr.py and multidr/cl.py.
+* Import installed modules from python (e.g., `from multidr.tdr import TDR`). See `sample.py` for examples.
+* For detailed documentations, please see `doc/index.html` or directly see comments in `multidr/tdr.py` and `multidr/cl.py`.
 
 ******
 
@@ -45,14 +45,14 @@ Web-based Visual Interface Setup
   * Browser supporting JavaScript ES2015(ES6) and WebGL 2.0.
   * Internet connection (to access D3 library)
 
-* Note: Tested on macOS Catalina.
+* Note: Tested on macOS Catalina and Ubuntu 20.0.4 LTS.
 
 
 ### Server Setup
 
-* Install multidr and ccpca modules based on "Back-End Library Setup"
+* Install `multidr` and `ccpca` modules based on "Back-End Library Setup"
 
-* Move to ui/server/ of this repository. Then,
+* Move to `ui/server/` of this repository. Then,
 
     `pip3 install -r requirements.txt`
 
@@ -62,17 +62,17 @@ Web-based Visual Interface Setup
 
     `python3 ws_server.py`
 
-* Run http server. For example, move to ui/client/ of this repository. Then,
+* Run http server. For example, move to `ui/client/` of this repository. Then,
 
     `python3 -m http.server`
 
 ### Client Setup
 
-* Access to the url setup in the http server. For example, if you set an http server with the above command. You can acess with: http://localhost:8000/
+* Access to the url setup in the http server. For example, if you set an http server with the above command. You can acess with: `http://localhost:8000/`
 
 ### How to Include New Datasets
 
-* Please, refer to ui/doc/data_format.md
+* Please, refer to `ui/doc/data_format.md`
 
 ******
 
