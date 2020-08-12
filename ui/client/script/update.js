@@ -48,7 +48,8 @@ const siViews = {
   'instance': {
     'default': instanceViewDefault,
     'map': instanceViewUsMap,
-    'network': instanceViewNetwork
+    'network': instanceViewNetwork,
+    'hpcLog': instanceViewHpcLog
   },
   'variable': {
     'default': variableViewDefault,
