@@ -78,4 +78,4 @@ Web-based Visual Interface Setup
 
 ## How to Cite
 Please, cite:    
-Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction". arXiv:2008.01645, 2020.
+Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction". IEEE Transactions on Visualization and Computer Graphics, forthcoming.
