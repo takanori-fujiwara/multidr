@@ -3,8 +3,8 @@ import os
 from distutils.core import setup
 
 setup(name='multidr',
-      version=0.01,
+      version=0.02,
       packages=[''],
       package_dir={'': '.'},
-      install_requires=['numpy', 'sklearn', 'umap-learn', 'matplotlib'],
+      install_requires=['autograd', 'sklearn', 'umap-learn', 'matplotlib'],
       py_modules=['multidr', 'multidr.tdr', 'multidr.cl'])

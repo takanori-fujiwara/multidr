@@ -208,7 +208,7 @@ class TDR():
         for t in range(T):
             X_tn_d[t * N:(t + 1) * N, :] = X[t, :, :]
         for n in range(N):
-            X_nd_t[n * D:(n + 1) * D, :] = X[:, n, :].transpose()
+            X_nd_t[n * D:(n + 1) * D, :] = X[:, n, :].T
         for d in range(D):
             X_dt_n[d * T:(d + 1) * T, :] = X[:, :, d]
 
@@ -302,30 +302,69 @@ class TDR():
             scl['n'] = preprocessing.scale
 
         # second DR
-        self.Z_n_dt = self.second_learner['t'].fit_transform(scl['t'](
-            Y_tn.transpose()))
+        ### Z_n_dt ###
+        try:
+            self.Z_n_dt = self.second_learner['t'].fit_transform(scl['t'](
+                Y_tn.T))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_n_dt = np.random.rand(Y_tn.T.shape[0],
+                                         self.second_learner['t'].n_components)
         if verbose:
             print("Z_n_dt done")
 
-        self.Z_d_nt = self.second_learner['t'].fit_transform(scl['t'](Y_dt))
+        ### Z_d_nt ###
+        try:
+            self.Z_d_nt = self.second_learner['t'].fit_transform(
+                scl['t'](Y_dt))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_d_nt = np.random.rand(Y_dt.shape[0],
+                                         self.second_learner['t'].n_components)
         if verbose:
             print("Z_d_nt done")
 
-        self.Z_t_dn = self.second_learner['n'].fit_transform(scl['n'](Y_tn))
+        ### Z_t_dn ###
+        try:
+            self.Z_t_dn = self.second_learner['n'].fit_transform(
+                scl['n'](Y_tn))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_t_dn = np.random.rand(Y_tn.shape[0],
+                                         self.second_learner['n'].n_components)
         if verbose:
             print("Z_t_dn done")
 
-        self.Z_d_tn = self.second_learner['n'].fit_transform(scl['n'](
-            Y_nd.transpose()))
+        ### Z_d_tn ###
+        try:
+            self.Z_d_tn = self.second_learner['n'].fit_transform(scl['n'](
+                Y_nd.T))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_d_tn = np.random.rand(Y_nd.T.shape[0],
+                                         self.second_learner['n'].n_components)
         if verbose:
             print("Z_d_tn done")
 
-        self.Z_t_nd = self.second_learner['d'].fit_transform(scl['d'](
-            Y_dt.transpose()))
+        ### Z_t_nd ###
+        try:
+            self.Z_t_nd = self.second_learner['d'].fit_transform(scl['d'](
+                Y_dt.T))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_t_nd = np.random.rand(Y_dt.T.shape[0],
+                                         self.second_learner['d'].n_components)
         if verbose:
             print("Z_t_nd done")
 
-        self.Z_n_td = self.second_learner['d'].fit_transform(scl['d'](Y_nd))
+        ### Z_n_td ###
+        try:
+            self.Z_n_td = self.second_learner['d'].fit_transform(
+                scl['d'](Y_nd))
+        except:
+            print('Second learner had errors. Assign random positions')
+            self.Z_n_td = np.random.rand(Y_nd.shape[0],
+                                         self.second_learner['d'].n_components)
         if verbose:
             print("Z_n_td done")
 
