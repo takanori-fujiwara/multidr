@@ -60,8 +60,7 @@ def _get_fc_info(args, emb_type):
     selected = np.array(args['selected'], dtype=bool)
 
     # ccpca with sign adjustment
-    cl = CL(learner=CCPCA())
-    ccpca = CCPCA()
+    cl = CL(learner=CCPCA(n_components=1))
     cl.fit(X[selected, :],
            X[np.logical_not(selected), :],
            var_thres_ratio=0.5,
