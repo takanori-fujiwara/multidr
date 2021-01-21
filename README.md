@@ -26,6 +26,8 @@ Back-End Library Setup
 
     `pip3 install .`
 
+    * Note (Jan 20, 2021): Currently, a required package, umap-learn, does not support Python 3.9 because it relies on numba which also does not support Python 3.9. Consider using Python 3.8, or remove umap-learn from setup.py and replace the place related to UMAP in multidr/tdr.py (e.g., using TSNE in sklearn instead.)
+
 * If you want to use contrastive learning with a default setting (i.e., use of ccPCA), install ccPCA from: https://github.com/takanori-fujiwara/ccpca
 
 ### Usage
