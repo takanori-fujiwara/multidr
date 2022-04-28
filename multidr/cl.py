@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.stats import pearsonr
 
-from ccpca import CCPCA
-
 
 class CL():
     """TDR: Two-step dimensionality reduction (DR) to project a third-order
@@ -73,6 +71,7 @@ class CL():
     >>> plt.title('Feature cotributions')
     >>> plt.show()
     """
+
     def __init__(self, learner=None):
         self.learner = None
         self.fcs = None
@@ -135,6 +134,7 @@ class CL():
         self.
         """
         if learner is None:
+            from ccpca import CCPCA
             self.learner = CCPCA()
         else:
             self.learner = learner

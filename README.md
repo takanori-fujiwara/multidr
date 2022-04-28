@@ -1,8 +1,12 @@
 ## MulTiDR: A Visual Analytics Framework for Reviewing Multivariate Time-Series Data with Dimensionality Reduction
 
+New
+-----
+* Now, MulTiDR is available from all major OSs, Mac OS, Linux, and Windows (but the websocket server implementation used for the web UI is beta for Windows)
+
 About
 -----
-* MulTiDR is from: Fujiwara et al., "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction." 2020.  
+* MulTiDR is from: Fujiwara et al., "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction." IEEE Transactions on Visualization and Computer Graphics, vol. 27, no. 2, pp. 1601-1611, 2021.
 
 * Implementation of MulTiDR back-end algorithms
  * Two-step DR (TDR): Framework of dimensionality reduction for multivariate time-series data. TDR produces a low-dimensional representation from a third-order tensor.
@@ -19,14 +23,12 @@ Back-End Library Setup
 
 ### Requirements
 * Python3
-* Note: Tested on macOS Catalina and Ubuntu 20.0.4 LTS.
+* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, and Windows 10.
 
 ### Setup
 * Install with pip3. Move to the directory of this repository. Then,
 
     `pip3 install .`
-
-    * Note (Jan 20, 2021): Currently, a required package, umap-learn, does not support Python 3.9 because it relies on numba which also does not support Python 3.9. Consider using Python 3.8, or remove umap-learn from setup.py and replace the place related to UMAP in multidr/tdr.py (e.g., using TSNE in sklearn instead.)
 
 * If you want to use contrastive learning with a default setting (i.e., use of ccPCA), install ccPCA from: https://github.com/takanori-fujiwara/ccpca
 
@@ -47,7 +49,7 @@ Web-based Visual Interface Setup
   * Browser supporting JavaScript ES2015(ES6) and WebGL 2.0.
   * Internet connection (to access D3 library)
 
-* Note: Tested on macOS Catalina and Ubuntu 20.0.4 LTS.
+* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, and Windows 10.
 
 
 ### Server Setup
@@ -62,11 +64,11 @@ Web-based Visual Interface Setup
 
 * Run websocket server:
 
-    `python3 ws_server.py`
+    `python3 ws_server.py` or  `python ws_server.py`
 
 * Run http server. For example, move to `ui/client/` of this repository. Then,
 
-    `python3 -m http.server`
+    `python3 -m http.server` or  `python -m http.server`
 
 ### Client Setup
 
@@ -80,4 +82,4 @@ Web-based Visual Interface Setup
 
 ## How to Cite
 Please, cite:    
-Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction". IEEE Transactions on Visualization and Computer Graphics, forthcoming.
+Takanori Fujiwara, Shilpika, Naohisa Sakamoto, Jorji Nonaka, Keiji Yamamoto, and Kwan-Liu Ma, "A Visual Analytics Framework for ReviewingMultivariate Time-Series Data with Dimensionality Reduction". IEEE Transactions on Visualization and Computer Graphics, vol. 27, no. 2, pp. 1601-1611, 2021.
