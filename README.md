@@ -23,7 +23,7 @@ Back-End Library Setup
 
 ### Requirements
 * Python3
-* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, and Windows 10.
+* Note: Tested on macOS Ventura, Ubuntu 22.0.4 LTS, and Windows 10.
 
 ### Setup
 * Install with pip3. Move to the directory of this repository. Then,
@@ -49,7 +49,7 @@ Web-based Visual Interface Setup
   * Browser supporting JavaScript ES2015(ES6) and WebGL 2.0.
   * Internet connection (to access D3 library)
 
-* Note: Tested on macOS BigSur, Ubuntu 20.0.4 LTS, and Windows 10.
+* Note: Tested on macOS Ventura, Ubuntu 22.0.4 LTS, and Windows 10.
 
 
 ### Server Setup
