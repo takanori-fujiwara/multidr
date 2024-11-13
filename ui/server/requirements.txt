@@ -2,7 +2,7 @@
 numpy
 scipy
 uvloop ; sys_platform == "linux" or sys_platform == "darwin"
-websockets >= 10.3
+websockets < 14.0
 
 ###### Other packages ######
 ## ccpca: refer to https://github.com/takanori-fujiwara/ccpca
