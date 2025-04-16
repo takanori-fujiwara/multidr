@@ -178,7 +178,7 @@ async def _handle_message(event_loop, executor, ws, recv_msg):
         await _send(event_loop, executor, ws, m["content"], _write_hist_info_response)
 
 
-def start_websocket_server(host="0.0.0.0", port=9000, max_workers=4):
+async def start_websocket_server(host="0.0.0.0", port=9000, max_workers=4):
     if not sys.platform.startswith("win"):
         import uvloop
 
@@ -193,7 +193,9 @@ def start_websocket_server(host="0.0.0.0", port=9000, max_workers=4):
         event_loop.add_signal_handler(signal.SIGINT, stop.set_result, True)
 
         # Run the server until the stop condition is met.
-        event_loop.run_until_complete(_serve(event_loop, executor, stop, host, port))
+        event_loop.run_until_complete(
+            await _serve(event_loop, executor, stop, host, port)
+        )
     else:  # windows
         # Windows cannot use uvloop library and signals
         asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
@@ -204,11 +206,13 @@ def start_websocket_server(host="0.0.0.0", port=9000, max_workers=4):
         stop = asyncio.Future()
 
         try:
-            event_loop.run_until_complete(
-                _serve(event_loop, executor, stop, host, port)
-            )
+            await _serve(event_loop, executor, stop, host, port)
+            # event_loop.run_until_complete(
+            #     _serve(event_loop, executor, stop, host, port)
+            # )
         finally:
-            event_loop.close()
+            executor.shutdown(wait=True)
+            # event_loop.close()
 
 
-start_websocket_server(host="0.0.0.0", port=9000, max_workers=4)
+asyncio.run(start_websocket_server(host="0.0.0.0", port=9000, max_workers=4))
