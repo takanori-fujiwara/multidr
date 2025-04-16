@@ -23,7 +23,7 @@ Back-End Library Setup
 
 ### Requirements
 * Python3
-* Note: Tested on macOS Sonoma, Ubuntu 22.0.4 LTS, and Windows 10.
+* Note: Tested on macOS Sequoia, Ubuntu 22.0.4 LTS, and Windows 10.
 
 ### Setup
 * Install with pip3. Move to the directory of this repository. Then,
